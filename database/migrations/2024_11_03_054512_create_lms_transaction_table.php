@@ -12,13 +12,14 @@ class CreateLmsTransactionTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('lms_user')->onDelete('cascade');
             $table->foreignId('loan_id')->nullable()->constrained('lms_loan')->onDelete('cascade');
-            $table->enum('transaction_type', ['credit', 'debit']);
-            $table->decimal('transaction_amount', 15, 2);
+            $table->string('transaction_type');// ['credit', 'debit']);
+            $table->integer('transaction_amount', 15, 2);
             $table->date('transaction_date');
             $table->string('razorpay_id')->nullable();
             $table->string('payment_mode');
             $table->date('end_at')->nullable();
-            $table->timestamps();
+            $table->dateTime('created_timestamp');
+            $table->dateTime('updated_timestamp');
             $table->tinyInteger('is_show_flag')->default(1);
             $table->tinyInteger('status')->default(1);
 

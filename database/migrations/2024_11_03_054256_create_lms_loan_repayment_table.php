@@ -12,15 +12,16 @@ class CreateLmsLoanRepaymentTable extends Migration
             $table->id();
             $table->foreignId('loan_id')->constrained('lms_loan')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('lms_user')->onDelete('cascade');
-            $table->decimal('total_loan_amount', 15, 2);
-            $table->decimal('emi_amount_due', 15, 2);
-            $table->decimal('amount_paid', 15, 2);
-            $table->decimal('remaining_amount', 15, 2);
+            $table->integer('total_loan_amount', 15, 2);
+            $table->integer('emi_amount_due', 15, 2);
+            $table->integer('amount_paid', 15, 2);
+            $table->integer('remaining_amount', 15, 2);
             $table->date('due_date');
             $table->date('payment_date')->nullable();
-            $table->enum('status', ['paid', 'unpaid']);
+            $table->tinyInteger('status');
             $table->tinyInteger('is_show_flag')->default(1);
-            $table->timestamps();
+            $table->dateTime('created_timestamp');
+            $table->dateTime('updated_timestamp');
 
             $table->index(['amount_paid', 'remaining_amount']);
             $table->index(['emi_amount_due']);

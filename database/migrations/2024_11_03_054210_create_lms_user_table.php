@@ -16,11 +16,14 @@ class CreateLmsUserTable extends Migration
             $table->string('password');
             $table->text('pancard_no');
             $table->date('created_date');
-            $table->timestamps();
+            $table->date('created_date');
+            $table->dateTime('created_timestamp');
+            $table->dateTime('updated_timestamp');
             $table->tinyInteger('is_show_flag')->default(1);
             $table->tinyInteger('status')->default(1);
 
             $table->index(['created_date']);
+            $table->index(['updated_date']);
             $table->index(['id', 'status']);
         });
     }

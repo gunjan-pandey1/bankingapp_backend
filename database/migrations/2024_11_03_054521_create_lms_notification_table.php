@@ -11,9 +11,9 @@ class CreateLmsNotificationTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('lms_user')->onDelete('cascade');
             $table->text('message');
-            $table->enum('notification_type', ['info', 'warning', 'error']);
-            $table->enum('notification_status', ['read', 'unread']);
-            $table->timestamps();
+            $table->string('notification_type');// ['info', 'warning', 'error']);
+            $table->dateTime('created_timestamp');
+            $table->dateTime('updated_timestamp');
             $table->tinyInteger('is_show')->default(1);
             $table->tinyInteger('status')->default(1);
 
