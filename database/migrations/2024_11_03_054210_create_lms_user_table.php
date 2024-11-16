@@ -21,7 +21,6 @@ class CreateLmsUserTable extends Migration
             $table->dateTime('updated_timestamp');
             $table->tinyInteger('is_show_flag')->default(1);
             $table->tinyInteger('status')->default(1);
-
             $table->index(['created_date']);
             $table->index(['updated_date']);
             $table->index(['id', 'status']);
