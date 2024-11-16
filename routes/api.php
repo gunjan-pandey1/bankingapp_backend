@@ -10,16 +10,26 @@ use App\Http\Controllers\UserDetailsController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ForgotPasswordController; 
 
-//USER LEVEL
+//Onboarding
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('password/forgot', [ForgotPasswordController::class, 'forgetPassword'])->name('forgot-password');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');
-Route::get('/dashboard', [DashboardController::class, 'dashboardDetails'])->name('dashboard');
 
+//dashboard & UI
+Route::get('/dashboard', [DashboardController::class, 'dashboardDetails'])->name('dashboard');
+Route::get('/loansDetails', [LoanDetailsController::class, 'loansDetails'])->name('loansDetails');
+Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
+Route::get('/txnDetails', [TxnDetailsController::class, 'txnDetails'])->name('txnDetails');
+Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');
+
+//Loan Application Process
+Route::post('/bankDetails', [BankDetailsController::class, 'bankDetails'])->name('bankDetails');
+Route::post('/loanApplication', [LoanApplicationController::class, 'loanApplicationProcess'])->name('loanApplication');
+Route::post('/emiRepayment', [EmiRepaymentController::class, 'emiRepayment'])->name('emiRepayment');
 
 
 //ADMIN LEVEL
 Route::get('/user-details', [UserDetailsController::class, 'getAllUsers']);
 Route::delete('/user-details/{id}', [UserDetailsController::class, 'deleteUser']);
-Route::post('/user-form', [UserFormController::class, 'userFormProcess']);
