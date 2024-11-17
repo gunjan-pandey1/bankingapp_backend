@@ -46,16 +46,45 @@
 #!/bin/bash
 
 # Create controllers for the API routes
-php artisan make:controller RegisterController
-php artisan make:controller LoginController
-php artisan make:controller ForgotPasswordController
-php artisan make:controller ResetPasswordController
-php artisan make:controller DashboardController
-php artisan make:controller LoanDetailsController
-php artisan make:controller LoanViewDetailsController
-php artisan make:controller TxnDetailsController
-php artisan make:controller ProfileDetailsController
-php artisan make:controller BankDetailsController
-php artisan make:controller LoanApplicationController
-php artisan make:controller EmiRepaymentController
-php artisan make:controller UserDetailsController
+# php artisan make:controller RegisterController
+# php artisan make:controller LoginController
+# php artisan make:controller ForgotPasswordController
+# php artisan make:controller ResetPasswordController
+# php artisan make:controller DashboardController
+# php artisan make:controller LoanDetailsController
+# php artisan make:controller LoanViewDetailsController
+# php artisan make:controller TxnDetailsController
+# php artisan make:controller ProfileDetailsController
+# php artisan make:controller BankDetailsController
+# php artisan make:controller LoanApplicationController
+# php artisan make:controller EmiRepaymentController
+# php artisan make:controller UserDetailsController
+
+
+# php artisan make:request RegisterRequest
+# php artisan make:request LoginRequest
+# php artisan make:request ForgotPasswordRequest
+# php artisan make:request ResetPasswordRequest
+# php artisan make:request DashboardRequest
+# php artisan make:request LoanDetailsRequest
+# php artisan make:request LoanViewDetailsRequest
+# php artisan make:request TxnDetailsRequest
+# php artisan make:request ProfileDetailsRequest
+# php artisan make:request BankDetailsRequest
+# php artisan make:request LoanApplicationRequest
+# php artisan make:request EmiRepaymentRequest
+# php artisan make:request UserDetailsRequest
+
+# php artisan make:factory LmsUserFactory --model=LmsUser
+# php artisan make:factory LmsBankDetailsFactory --model=LmsBankDetails
+# php artisan make:factory LmsLoanFactory --model=LmsLoan
+# php artisan make:factory LmsLoanRepaymentFactory --model=LmsLoanRepayment
+# php artisan make:factory LmsTransactionFactory --model=LmsTransaction
+# php artisan make:factory LmsNotificationFactory --model=LmsNotification
+
+# php artisan make:seeder LmsUserSeeder
+# php artisan make:seeder LmsBankDetailsSeeder
+# php artisan make:seeder LmsLoanSeeder
+# php artisan make:seeder LmsLoanRepaymentSeeder
+# php artisan make:seeder LmsTransactionSeeder
+# php artisan make:seeder LmsNotificationSeeder
