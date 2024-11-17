@@ -31,4 +31,3 @@ class CreateLmsLoanTable extends Migration
         Schema::dropIfExists('lms_loan');
     }
 }
-

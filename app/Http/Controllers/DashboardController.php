@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\DashboardService;
 use App\Http\Requests\DashboardRequest;
+use App\Service\DashboardService;
 
 class DashboardController extends Controller
 {
@@ -18,7 +17,7 @@ class DashboardController extends Controller
         try {
             $responseData = $this->dashboardService->dashboardDetails($dashboardRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Dashboard details retrieved successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Dashboard details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to retrieve dashboard details'], 200);
             }

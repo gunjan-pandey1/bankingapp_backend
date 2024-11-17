@@ -2,25 +2,18 @@
 
 namespace App\Providers;
 
-use App\Repository\LoginRepository;
-use App\Repository\UserDetailsRepository;
-use App\Repository\UserFormRepository;
-use App\Repository\RegisterRepository;
-use App\Repository\ResetPasswordRepository;
 use App\Repository\ForgetPasswordEmailRepository;
-
-
-use App\Repository\Mysql\UserDetailsRepositoryImpl;
-use App\Repository\Mysql\UserFormRepositoryImpl;
-use App\Repository\Mysql\ResetPasswordRepositoryImpl;
+use App\Repository\LoginRepository;
 use App\Repository\Mysql\ForgetPasswordEmailRepositoryImpl;
 use App\Repository\Mysql\LoginRepositoryImpl;
 use App\Repository\Mysql\RegisterRepositoryImpl;
-
+use App\Repository\Mysql\UserDetailsRepositoryImpl;
+use App\Repository\Mysql\UserFormRepositoryImpl;
+use App\Repository\RegisterRepository;
+use App\Repository\UserDetailsRepository;
+use App\Repository\UserFormRepository;
 use Illuminate\Support\Facades\URL;
-
 use Illuminate\Support\ServiceProvider;
-
 
 class AppServiceProvider extends ServiceProvider
 {

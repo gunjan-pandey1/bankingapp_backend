@@ -34,4 +34,3 @@ class CreateLmsBankDetailsTable extends Migration
         Schema::dropIfExists('lms_bank_details');
     }
 }
-

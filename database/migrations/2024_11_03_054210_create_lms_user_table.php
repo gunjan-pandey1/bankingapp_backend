@@ -32,4 +32,3 @@ class CreateLmsUserTable extends Migration
         Schema::dropIfExists('lms_user');
     }
 }
-

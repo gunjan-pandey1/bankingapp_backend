@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\TxnDetailsService;
 use App\Http\Requests\TxnDetailsRequest;
+use App\Service\TxnDetailsService;
 
 class TxnDetailsController extends Controller
 {
@@ -18,7 +17,7 @@ class TxnDetailsController extends Controller
         try {
             $responseData = $this->txnDetailsService->txnDetails($txnDetailsRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Transaction details retrieved successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Transaction details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to retrieve transaction details'], 200);
             }

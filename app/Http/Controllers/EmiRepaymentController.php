@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\EmiRepaymentService;
 use App\Http\Requests\EmiRepaymentRequest;
+use App\Service\EmiRepaymentService;
 
 class EmiRepaymentController extends Controller
 {
@@ -18,7 +17,7 @@ class EmiRepaymentController extends Controller
         try {
             $responseData = $this->emiRepaymentService->emiRepayment($emiRepaymentRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'EMI repaid successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'EMI repaid successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'EMI repayment failed'], 200);
             }

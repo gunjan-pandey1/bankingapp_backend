@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\ProfileDetailsService;
 use App\Http\Requests\ProfileDetailsRequest;
+use App\Service\ProfileDetailsService;
 
 class ProfileDetailsController extends Controller
 {
@@ -18,7 +17,7 @@ class ProfileDetailsController extends Controller
         try {
             $responseData = $this->profileDetailsService->profileDetails($profileDetailsRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Profile details retrieved successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Profile details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to retrieve profile details'], 200);
             }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -19,7 +20,7 @@ class ResetPasswordMail extends Mailable
     public function build()
     {
         return $this->view('emails.reset_password')
-                    ->with('data', $this->emailData)
-                    ->subject($this->emailData['subject']);
+            ->with('data', $this->emailData)
+            ->subject($this->emailData['subject']);
     }
 }

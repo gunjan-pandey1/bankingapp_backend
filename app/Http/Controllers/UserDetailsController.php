@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\UserDetailsService;
 use App\Http\Requests\UserDetailsRequest;
+use App\Service\UserDetailsService;
 
 class UserDetailsController extends Controller
 {
@@ -18,7 +17,7 @@ class UserDetailsController extends Controller
         try {
             $responseData = $this->userDetailsService->userDetails($userDetailsRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'User details retrieved successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'User details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to retrieve user details'], 200);
             }

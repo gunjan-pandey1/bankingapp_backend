@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Service\LoginService;
 
 class LoginController extends Controller
@@ -17,7 +16,7 @@ class LoginController extends Controller
         try {
             $responseData = $this->loginService->login($loginRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Login successful', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Login successful', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Login failed'], 200);
             }

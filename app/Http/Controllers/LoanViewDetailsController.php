@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\LoanViewDetailsService;
 use App\Http\Requests\LoanViewDetailsRequest;
+use App\Service\LoanViewDetailsService;
 
 class LoanViewDetailsController extends Controller
 {
@@ -18,7 +17,7 @@ class LoanViewDetailsController extends Controller
         try {
             $responseData = $this->loanViewDetailsService->loanViewDetails($loanViewDetailsRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Loan view details retrieved successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Loan view details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to retrieve loan view details'], 200);
             }

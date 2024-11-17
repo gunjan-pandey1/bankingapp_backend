@@ -10,7 +10,7 @@ class RedisHelper
     {
         return Redis::get($key);
     }
-    
+
     public function set($key, $value, $expiration = 3600)
     {
         return Redis::set($key, $value, 'EX', $expiration);

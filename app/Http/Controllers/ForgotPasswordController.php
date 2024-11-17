@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\ForgotPasswordService;
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Service\ForgotPasswordService;
 
 class ForgotPasswordController extends Controller
 {
@@ -18,7 +17,7 @@ class ForgotPasswordController extends Controller
         try {
             $responseData = $this->forgotPasswordService->forgotPassword($forgotPasswordRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Password reset link sent successfully', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Password reset link sent successfully', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to send password reset link'], 200);
             }

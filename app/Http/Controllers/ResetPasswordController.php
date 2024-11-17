@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\ResetPasswordService;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Service\ResetPasswordService;
 
 class ResetPasswordController extends Controller
 {
@@ -18,7 +17,7 @@ class ResetPasswordController extends Controller
         try {
             $responseData = $this->resetPasswordService->resetPassword($resetPasswordRequest);
             if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Password reset successful', "data" => $responseData["data"]], 200);
+                return response()->json(['success' => true, 'message' => 'Password reset successful', 'data' => $responseData['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Password reset failed'], 200);
             }

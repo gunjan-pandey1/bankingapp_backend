@@ -1,19 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\TxnDetailsController;
 use App\Http\Controllers\BankDetailsController;
-use App\Http\Controllers\LoanDetailsController;
-use App\Http\Controllers\UserDetailsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmiRepaymentController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\ProfileDetailsController;
-use App\Http\Controllers\ForgotPasswordController; 
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LoanApplicationController;
+use App\Http\Controllers\LoanDetailsController;
 use App\Http\Controllers\LoanViewDetailsController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProfileDetailsController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\TxnDetailsController;
+use App\Http\Controllers\UserDetailsController;
+use Illuminate\Support\Facades\Route;
 
 //Onboarding
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
@@ -33,7 +33,6 @@ Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'
 Route::post('/bankDetails', [BankDetailsController::class, 'bankDetails'])->name('bankDetails');
 Route::post('/loanApplication', [LoanApplicationController::class, 'loanApplicationProcess'])->name('loanApplication');
 Route::post('/emiRepayment', [EmiRepaymentController::class, 'emiRepayment'])->name('emiRepayment');
-
 
 //ADMIN LEVEL
 Route::get('/user-details', [UserDetailsController::class, 'getAllUsers']);

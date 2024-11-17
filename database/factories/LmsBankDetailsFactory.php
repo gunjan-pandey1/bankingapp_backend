@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\LmsBankDetails;
-use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
