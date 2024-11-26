@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 //Onboarding
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
-Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::post('/login', [LoginController::class, 'loginprocess'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('password/forgot', [ForgotPasswordController::class, 'forgetPassword'])->name('forgot-password');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');

@@ -3,7 +3,6 @@
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
-use Monolog\Processor\PsrLogMessageProcessor;
 
 return [
 
@@ -62,7 +61,6 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'replace_placeholders' => true,
         ],
 
         'daily' => [
@@ -70,7 +68,6 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
-            'replace_placeholders' => true,
         ],
 
         'slack' => [
@@ -79,7 +76,6 @@ return [
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => env('LOG_LEVEL', 'critical'),
-            'replace_placeholders' => true,
         ],
 
         'papertrail' => [
@@ -91,7 +87,6 @@ return [
                 'port' => env('PAPERTRAIL_PORT'),
                 'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
             ],
-            'processors' => [PsrLogMessageProcessor::class],
         ],
 
         'stderr' => [
@@ -102,22 +97,35 @@ return [
             'with' => [
                 'stream' => 'php://stderr',
             ],
-            'processors' => [PsrLogMessageProcessor::class],
         ],
-
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
-            'facility' => LOG_USER,
-            'replace_placeholders' => true,
         ],
-
+        'info' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/info.log'),
+            'level' => 'info',
+        ],
+        'warning' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/warning.log'),
+            'level' => 'warning',
+        ],
+        'critical' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'critical',
+        ],
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
-            'replace_placeholders' => true,
         ],
-
+        'error' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/error.log'),
+            'level' => 'error',
+        ],
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,

@@ -11,7 +11,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,26 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:3',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'A name is required.',
+            'email.required' => 'An email address is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'email.unique' => 'The email has already been taken.',
+            'password.required' => 'A password is required.',
+            'password.min' => 'The password must be at least 3 characters.',
         ];
     }
 }

@@ -11,6 +11,8 @@ class LmsBankDetails extends Model
 
     protected $table = 'lms_bank_details';
 
+    public $timestamps = false;
+
     protected $fillable = [
         // Add your fillable attributes here
     ];

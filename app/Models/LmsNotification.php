@@ -11,6 +11,8 @@ class LmsNotification extends Model
 
     protected $table = 'lms_notification';
 
+    public $timestamps = false;
+
     protected $fillable = [
         // Add your fillable attributes here
     ];

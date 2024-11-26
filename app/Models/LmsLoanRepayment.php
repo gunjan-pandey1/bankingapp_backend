@@ -11,6 +11,8 @@ class LmsLoanRepayment extends Model
 
     protected $table = 'lms_loan_repayment';
 
+    public $timestamps = false;
+
     protected $fillable = [
         // Add your fillable attributes here
     ];

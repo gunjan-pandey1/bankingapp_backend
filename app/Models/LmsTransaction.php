@@ -11,6 +11,8 @@ class LmsTransaction extends Model
 
     protected $table = 'lms_transaction';
 
+    public $timestamps = false;
+
     protected $fillable = [
         // Add your fillable attributes here
     ];
