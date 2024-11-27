@@ -48,7 +48,7 @@
 # Create controllers for the API routes
 # php artisan make:controller RegisterController
 # php artisan make:controller LoginController
-# php artisan make:controller ForgotPasswordController
+# php artisan make:controller ForgetPasswordController
 # php artisan make:controller ResetPasswordController
 # php artisan make:controller DashboardController
 # php artisan make:controller LoanDetailsController
@@ -63,7 +63,7 @@
 
 # php artisan make:request RegisterRequest
 # php artisan make:request LoginRequest
-# php artisan make:request ForgotPasswordRequest
+# php artisan make:request ForgetPasswordRequest
 # php artisan make:request ResetPasswordRequest
 # php artisan make:request DashboardRequest
 # php artisan make:request LoanDetailsRequest

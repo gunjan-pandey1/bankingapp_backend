@@ -16,8 +16,8 @@ class RegisterController extends Controller
 
     public function registerProcess(RegisterRequest $registerRequest)
     {
-        Log::info("RegisterController::registerProcess", $registerRequest->toArray());
         try {
+            Log::info("RegisterController::registerProcess", $registerRequest->toArray());
             $responseData = $this->registerService->register($registerRequest);
             if (strtolower($responseData['status']) == 'success') {
                  Log::channel('info')->info("RegisterController", $responseData);

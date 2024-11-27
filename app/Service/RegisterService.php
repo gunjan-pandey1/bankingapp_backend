@@ -14,20 +14,21 @@ class RegisterService
     {}
     public function register(object $registerParams)
     {
+        $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
         try { 
-            $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
             // Prepare data to check if email already exists
             $registerGetBo = [
                 "email" => $registerParams->email,
-                "id" => $registerParams->id,
+                // "id" => $registerParams->id,
             ];
+            Log::channel('info')->info("[$currentDateTime]: DB response from registerGet: " . json_encode($registerGetBo));
+
             // Get response from repository
-            $registerDbResponse = $this->registerRepository->registerGet($registerGetBo);
+        $registerDbResponse = $this->registerRepository->registerGet($registerGetBo);
             if ($registerDbResponse) {
                 Log::channel('error')->error(message: "[$currentDateTime]: registerDbResponse: " . json_encode($registerDbResponse));
                 return ['status' => CommonConstant::ERROR, 'message' => 'Email is already registered',  "data" => []];
             }
-            Log::channel('info')->info("[$currentDateTime]: DB response from registerGet: " . json_encode($registerGetBo));
 
             // Prepare data for insertion
             $registerInsertBo = [
@@ -42,25 +43,6 @@ class RegisterService
 
             // Insert the user into the database
             $registerDbResponse = $this->registerRepository->registerCreate($registerInsertBo);
-
-            // Log the DB response after insertion
-            // Log::info("DB response from registerCreate: " . json_encode($registerDbResponse));
-            
-            // if ($registerDbResponse) {
-            //     Log::info("DB response from registerCreate success: " . json_encode($registerDbResponse));
-            //     return [
-            //         "message" => "Register Successful",
-            //         "status" => "success",
-            //         "data" => $registerDbResponse["data"] ?? []
-            //     ];
-            // } else {
-            //     Log::info("DB response from registerCreate error: " . json_encode($registerDbResponse));
-            //     return [
-            //         "message" => "Register Failed",
-            //         "status" => "fail",
-            //         "data" => []
-            //     ];        
-            // }/
             Log::channel('info')->info("[$currentDateTime] User ID: $registerParams->id - user registration started", ['registerParams'=> $registerDbResponse]);
             if ($registerDbResponse) {
                 Log::channel('info')->info("[$currentDateTime] User ID: $registerParams->id - user data inserted");

@@ -3,7 +3,7 @@
 use App\Http\Controllers\BankDetailsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmiRepaymentController;
-use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\LoanApplicationController;
 use App\Http\Controllers\LoanDetailsController;
 use App\Http\Controllers\LoanViewDetailsController;
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
 Route::post('/login', [LoginController::class, 'loginprocess'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::post('password/forgot', [ForgotPasswordController::class, 'forgetPassword'])->name('forgot-password');
+Route::post('password/forget', [ForgetPasswordController::class, 'forgetPassword'])->name('forget-password');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');
 
 //dashboard & UI

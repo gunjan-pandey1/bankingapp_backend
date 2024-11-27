@@ -5,6 +5,7 @@ namespace App\Repository\Mysql;
 use App\Models\User;
 use App\Models\LmsUser;
 use App\Common\LogHelper;
+use Illuminate\Support\Facades\Log;
 use App\Repository\RegisterRepository;
 
 class RegisterRepositoryImpl implements RegisterRepository
@@ -45,6 +46,8 @@ class RegisterRepositoryImpl implements RegisterRepository
     {
         $email = $registerGetBo["email"];
         $userId = $registerGetBo["id"];
+        $this->logHelper->logInfo(json_encode($registerGetBo), " get data: ".$registerGetBo);
+
         try {
             // Log the attempt to retrieve a user
             $this->logHelper->logInfo($userId, 'Getting user with email: '.$email);

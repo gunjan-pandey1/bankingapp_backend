@@ -5,25 +5,28 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use App\Service\ForgotPasswordService;
-use App\Http\Requests\ForgotPasswordRequest;
+use App\Service\ForgetPasswordService;
+use App\Http\Requests\ForgetPasswordRequest;
 
-class ForgotPasswordController extends Controller
+class ForgetPasswordController extends Controller
 {
-    public function __construct(protected ForgotPasswordService $forgotPasswordService)
+    public function __construct(protected ForgetPasswordService $forgetPasswordService)
     {
-        $this->forgotPasswordService = $forgotPasswordService;
+        $this->forgetPasswordService = $forgetPasswordService;
     }
 
-    public function forgotPasswordProcess(ForgotPasswordRequest $forgotPasswordRequest)
+    public function forgetPasswordProcess(ForgetPasswordRequest $forgetPasswordRequest)
     {
+
         try {
-            Log::info($forgotPasswordRequest->all());
+
+            Log::channel('info')->info("forget_password request:", $forgetPasswordRequest->all());
+
             $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
-            $responseData = $this->forgotPasswordService->forgetPassword($forgotPasswordRequest);
+            $responseData = $this->forgetPasswordService->forgetPassword($forgetPasswordRequest);
 
             // Use json_encode or structured logging for arrays
-            Log::channel('error')->error("[$currentDateTime] forgot_password_error:", $responseData);
+            Log::channel('info')->info("[$currentDateTime] forget_password_response:", $responseData);
         
             if ($responseData["status"] == "success") {
                 return response()->json(["message" => "Reset link sent", "data" => $responseData["data"]], 201); // Success response

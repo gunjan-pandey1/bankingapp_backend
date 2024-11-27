@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ForgotpassMail extends Mailable
+class ForgetpassMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class ForgotpassMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Forgotpass Mail',
+            subject: 'Forgetpass Mail',
         );
     }
 
@@ -38,7 +38,7 @@ class ForgotpassMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.forgotpass',
+            view: 'emails.forgetpass',
             with: ['token' => $this->token], // Pass the token to the view
         );
     }
