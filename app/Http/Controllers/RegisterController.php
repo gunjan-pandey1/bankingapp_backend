@@ -11,25 +11,39 @@ class RegisterController extends Controller
 {
     public function __construct(protected RegisterService $registerService)
     {
-        $this->registerService = $registerService;
     }
 
     public function registerProcess(RegisterRequest $registerRequest)
     {
         try {
-            Log::info("RegisterController::registerProcess", $registerRequest->toArray());
+            Log::info('Registration attempt', ['data' => $registerRequest->safe()->all()]);
+            
             $responseData = $this->registerService->register($registerRequest);
-            if (strtolower($responseData['status']) == 'success') {
-                 Log::channel('info')->info("RegisterController", $responseData);
-                
-                return response()->json(['success' => true, 'message' => 'Registration successful', 'data' => $responseData['data']], 200);
-            } else {
-                Log::channel('error')->error("RegisterController", $responseData);
-
-                return response()->json(['success' => false,  'message' => 'Registration failed'], 200);
+            
+            if ($responseData['status'] === 'success') {
+                return response()->json([
+                    'message' => 'Registration successful',
+                    'data' => $responseData['data']
+                ], 201);
             }
+
+            $statusCode = $responseData['message'] === 'Email is already registered' ? 422 : 400;
+            
+            return response()->json([
+                'message' => $responseData['message'],
+                'errors' => ['email' => [$responseData['message']]]
+            ], $statusCode);
+
         } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
+            Log::error('Registration failed', [
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Registration failed',
+                'errors' => ['server' => ['An unexpected error occurred']]
+            ], 500);
         }
     }
 }

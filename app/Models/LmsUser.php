@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class LmsUser extends Model
+class LmsUser extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;   
 
@@ -52,5 +53,13 @@ class LmsUser extends Model
     // protected $casts = [
     //     'email_verified_at' => 'datetime',
     // ];
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    public function getJWTCustomClaims()
+    {
+        return []; // You can return custom claims here if needed
+    }
 
 }

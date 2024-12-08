@@ -44,14 +44,14 @@ class RegisterRepositoryImpl implements RegisterRepository
      */
     public function registerGet(array $registerGetBo)
     {
-        $email = $registerGetBo["email"];
-        $userId = $registerGetBo["id"];
-        $this->logHelper->logInfo(json_encode($registerGetBo), " get data: ".$registerGetBo);
-
+        $email = $registerGetBo['email'] ?? null;
+        $userId = $registerGetBo['id'] ?? null;
+        $this->logHelper->logInfo(json_encode($registerGetBo), " get data: ".json_encode($registerGetBo ?? []));
+    
         try {
             // Log the attempt to retrieve a user
             $this->logHelper->logInfo($userId, 'Getting user with email: '.$email);
-
+    
             // Retrieve the user by email
             $user = LmsUser::where('email', $email)->first();
             // If a user is found, return the user data, else return false
@@ -62,4 +62,5 @@ class RegisterRepositoryImpl implements RegisterRepository
             return false;
         }
     }
+    
 }

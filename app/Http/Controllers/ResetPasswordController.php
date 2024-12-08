@@ -7,6 +7,7 @@ use App\Service\ResetPasswordService;
 
 class ResetPasswordController extends Controller
 {
+    protected $resetPasswordService;
     public function __construct(protected ResetPasswordService $resetPasswordService)
     {
         $this->resetPasswordService = $resetPasswordService;
@@ -22,6 +23,7 @@ class ResetPasswordController extends Controller
                 return response()->json(['success' => false,  'message' => 'Password reset failed'], 200);
             }
         } catch (\Exception $exception) {
+            Log::error('Error occurred during password reset: ' . $exception->getMessage());
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }

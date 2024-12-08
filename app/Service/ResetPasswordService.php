@@ -4,7 +4,7 @@ namespace App\Service;
 
 class ResetPasswordService
 {
-    public function reset()
+    public function resetPassword()
     {
         // Reset password logic will go here
     }

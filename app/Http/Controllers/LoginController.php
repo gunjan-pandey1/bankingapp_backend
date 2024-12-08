@@ -10,27 +10,33 @@ class LoginController extends Controller
 {
     public function __construct(protected LoginService $loginService)
     {
-        $this->loginService = $loginService;
+        // $this->loginService = $loginService;
     }
 
     public function loginProcess(LoginRequest $loginRequest)
     {
-        Log::channel('info')->info("LoginController::loginProcess", $loginRequest->toArray());
         try {
+            Log::channel('info')->info("LoginController::loginProcess", $loginRequest->toArray());
             $credentials = $loginRequest->only('email', 'password');
             $responseData = $this->loginService->login($credentials);
-            if (strtolower($responseData['status']) == 'success') {
-                Log::channel('info')->info("LoginController", $responseData);
-                
-                return response()->json(['success' => true, 'message' => 'Login successful', 'data' => $responseData['data']], 200);
-            } else {
-                Log::channel('error')->error("LoginController", $responseData);
-                return response()->json(['success' => false,  'message' => 'Login failed'], 200);
+            if (!$responseData || isset($responseData['status']) && $responseData['status'] === 'fail') {
+                return response()->json([
+                    'success' => false,
+                    'message' => $responseData['message'] ?? 'Login failed'
+                ], 401);
             }
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
 
-            
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful',
+                'data' => [
+                    'token' => $responseData['token'],
+                    'user' => $responseData['user'],
+                ]
+            ], 200);
+        } catch (\Exception $exception) {
+            Log::channel('error')->error("LoginController error: " . $exception->getMessage());
+            throw $exception;
         }
     }
 }

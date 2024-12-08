@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
 Route::post('/login', [LoginController::class, 'loginprocess'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::post('password/forget', [ForgetPasswordController::class, 'forgetPassword'])->name('forget-password');
+Route::post('forgetPassword', [ForgetPasswordController::class, 'forgetPasswordProcess'])->name('forget-password');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');
 
 //dashboard & UI

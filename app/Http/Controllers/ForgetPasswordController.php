@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\Log;
 use App\Service\ForgetPasswordService;
 use App\Http\Requests\ForgetPasswordRequest;
 
+use function Laravel\Prompts\error;
+
 class ForgetPasswordController extends Controller
 {
+    protected $ForgetPasswordService;
     public function __construct(protected ForgetPasswordService $forgetPasswordService)
     {
         $this->forgetPasswordService = $forgetPasswordService;
@@ -19,9 +22,7 @@ class ForgetPasswordController extends Controller
     {
 
         try {
-
             Log::channel('info')->info("forget_password request:", $forgetPasswordRequest->all());
-
             $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
             $responseData = $this->forgetPasswordService->forgetPassword($forgetPasswordRequest);
 
@@ -36,7 +37,7 @@ class ForgetPasswordController extends Controller
                 return response()->json(["message" => "Failed to send reset link", "errors" => $responseData["message"]], 422); // General failure
             }
         } catch (\Exception $e) {
-            Log::channel(`error`)->error("[$currentDateTime] Error occurred: ".$e->getMessage());
+            Log::channel('error')->error("[$currentDateTime] Error occurred: ".$e->getMessage());
             return response()->json(["message" => "An error occurred while resetting user", "errors" => ["internal_error" => "Error occurred while resetting user"]], 500); // Server error response
         }   
     }
