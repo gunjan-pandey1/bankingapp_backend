@@ -4,8 +4,7 @@ namespace App\Service;
 
 use Exception;
 use Carbon\Carbon;
-use App\Common\RedisHelper;
-use App\Mail\ForgetpassMail;
+use App\Mail\ForgotpassMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Repository\ForgetPasswordEmailRepository;
@@ -14,7 +13,7 @@ class ForgetPasswordService {
 
     public function __construct(
         protected ForgetPasswordEmailRepository $forgetPasswordEmailRepository,
-        protected RedisHelper $redisHelper
+        // protected RedisHelper $redisHelper
     ) {}
 
     public function forgetPassword(object $objectParams) {
@@ -33,11 +32,11 @@ class ForgetPasswordService {
 
             $token = bin2hex(random_bytes(30)); // A more secure token
 
-            $this->redisHelper->set($token, $email, 300);
+            // $this->redisHelper->set($token, $email, 300);
 
             // Log and send email with reset link
             Log::info("[$currentDateTime] Email sent successfully: " . $email);
-            Mail::to($email)->send(new ForgetpassMail($token));
+            Mail::to($email)->send(new ForgotpassMail($token));
 
             return ["message" => "Email sent successfully", "status" => "success", "data" => []];
 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ResetPasswordRequest;
+use Illuminate\Support\Facades\Log;
 use App\Service\ResetPasswordService;
+use App\Http\Requests\ResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
-    protected $resetPasswordService;
     public function __construct(protected ResetPasswordService $resetPasswordService)
     {
         $this->resetPasswordService = $resetPasswordService;
@@ -23,7 +23,7 @@ class ResetPasswordController extends Controller
                 return response()->json(['success' => false,  'message' => 'Password reset failed'], 200);
             }
         } catch (\Exception $exception) {
-            Log::error('Error occurred during password reset: ' . $exception->getMessage());
+            Log::channel('error')->error('Error occurred during password reset: ' . $exception->getMessage());
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }

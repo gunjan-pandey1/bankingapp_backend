@@ -17,7 +17,6 @@ class LoginService
                     "status" => "fail",
                 ];
             }
-
             $user = auth('api')->user();
             Log::info("[$currentDateTime]: User authenticated successfully, ID: " . $user->id);
 
@@ -27,7 +26,7 @@ class LoginService
             ];
             
         } catch (\Exception $e) {
-            Log::error("[$currentDateTime]: Login error: " . $e->getMessage());
+            Log::channel('error')->error("[$currentDateTime]: Login error: " . $e->getMessage());
             throw $e;
         }
     }

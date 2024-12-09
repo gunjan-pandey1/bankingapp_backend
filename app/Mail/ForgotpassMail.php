@@ -1,14 +1,14 @@
 <?php
-
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ForgetpassMail extends Mailable
+class ForgotpassMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class ForgetpassMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Forgetpass Mail',
+            subject: 'Forgotpass Mail',
         );
     }
 
@@ -38,7 +38,7 @@ class ForgetpassMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.forgetpass',
+            view: 'emails.forgotpass',
             with: ['token' => $this->token], // Pass the token to the view
         );
     }
