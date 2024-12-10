@@ -11,14 +11,14 @@ class LoginService
         $currentDateTime = now();
         try {
             if (!$token = auth('api')->attempt($credentials)) {
-                Log::warning("[$currentDateTime]: Login attempt failed for email: " . $credentials['email']);
+                Log::channel('warning')->warning("[$currentDateTime]: Login attempt failed for email: " . $credentials['email']);
                 return [
                     "message" => "Invalid credentials",
                     "status" => "fail",
                 ];
             }
             $user = auth('api')->user();
-            Log::info("[$currentDateTime]: User authenticated successfully, ID: " . $user->id);
+            Log::channel('info')->info("[$currentDateTime]: User authenticated successfully, ID: " . $user->id);
 
             return [
                 'token' => $token,

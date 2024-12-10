@@ -35,7 +35,7 @@ class ResetPasswordService
             // Update password
             $hashedPassword = Hash::make($newPassword);
             $this->resetPasswordRepository->updatePassword($email, $hashedPassword);
-            Log::info('Password updated successfully for email: ' . $email);
+            Log::channel('info')->info('Password updated successfully for email: ' . $email);
             return [
                 'message' => 'Password reset successfully',
                 'status' => 'success',

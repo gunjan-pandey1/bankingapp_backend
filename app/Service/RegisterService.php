@@ -28,13 +28,13 @@ class RegisterService
                 Log::channel('error')->error("[$currentDateTime]: registerDbResponse: " . json_encode($registerDbResponse));
                 return ['status' => CommonConstant::ERROR, 'message' => 'Email is already registered', "data" => []];
             }
-    
+
             $registerInsertBo = [
                 "name" => $registerParams->name,
                 "email" => $registerParams->email,
-                "password" => Hash::make($registerParams->password),
+                "password" => $registerParams->password,
             ];
-            Log::info("Data to be inserted: " . json_encode($registerInsertBo));
+            Log::channel('info')->info("Data to be inserted: " . json_encode($registerInsertBo));
     
             $registerDbResponse = $this->registerRepository->registerCreate($registerInsertBo);
             Log::channel('info')->info("[$currentDateTime] User ID: $registerParams->id - user registration started", ['registerParams' => $registerDbResponse]);

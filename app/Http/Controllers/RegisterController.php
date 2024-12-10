@@ -16,7 +16,7 @@ class RegisterController extends Controller
     public function registerProcess(RegisterRequest $registerRequest)
     {
         try {
-            Log::info('Registration attempt', ['data' => $registerRequest->safe()->all()]);
+            Log::channel('info')->info('Registration attempt', ['data' => $registerRequest->safe()->all()]);
             
             $responseData = $this->registerService->register($registerRequest);
             
@@ -35,7 +35,7 @@ class RegisterController extends Controller
             ], $statusCode);
 
         } catch (\Exception $exception) {
-            Log::error('Registration failed', [
+            Log::channel('error')->error('Registration failed', [
                 'error' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString()
             ]);

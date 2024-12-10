@@ -8,12 +8,13 @@ use App\Mail\ForgotpassMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Repository\ForgetPasswordEmailRepository;
+use App\Common\EncryptionHelper;
 
 class ForgetPasswordService {
 
     public function __construct(
         protected ForgetPasswordEmailRepository $forgetPasswordEmailRepository,
-        // protected RedisHelper $redisHelper
+        protected EncryptionHelper $encryptionHelper
     ) {}
 
     public function forgetPassword(object $objectParams) {
@@ -30,12 +31,13 @@ class ForgetPasswordService {
                 return ["message" => "Email does not exist", "status" => "error", "data" => []];
             }
 
-            $token = bin2hex(random_bytes(30)); // A more secure token
+             // A more secure token
+            $token = $this->encryptionHelper->generateToken(30);
 
             // $this->redisHelper->set($token, $email, 300);
 
             // Log and send email with reset link
-            Log::info("[$currentDateTime] Email sent successfully: " . $email);
+            Log::channel('info')->info("[$currentDateTime] Email sent successfully: " . $email);
             Mail::to($email)->send(new ForgotpassMail($token));
 
             return ["message" => "Email sent successfully", "status" => "success", "data" => []];

@@ -27,6 +27,11 @@ class EncryptionHelper
         return Hash::check($value, $hashedValue);
     }
 
+    public function generateToken()
+    {
+        return bin2hex(random_bytes(30)); // Generate a random token
+    }
+
     public function tokenGenerationWallet($data, $secret, $algo = 'SHA512')
     {
         return hash_hmac($algo, json_encode(array_map('strval', $data)), $secret);
