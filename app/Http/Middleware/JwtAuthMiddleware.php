@@ -29,7 +29,6 @@ class JwtAuthMiddleware
             Log::channel('error')->error("[2024-12-10T23:01:43+05:30]: Token invalid: " . $e->getMessage());
             return response()->json(['message' => 'Token invalid'], 401);
         }
-
         return $next($request);
     }
 }

@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\BankDetailsController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EmiRepaymentController;
-use App\Http\Controllers\ForgetPasswordController;
-use App\Http\Controllers\LoanApplicationController;
-use App\Http\Controllers\LoanDetailsController;
-use App\Http\Controllers\LoanViewDetailsController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ProfileDetailsController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\TxnDetailsController;
-use App\Http\Controllers\UserDetailsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Middleware\JwtAuthMiddleware;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TxnDetailsController;
+use App\Http\Controllers\BankDetailsController;
+use App\Http\Controllers\CreditScoreController;
+use App\Http\Controllers\LoanDetailsController;
+use App\Http\Controllers\UserDetailsController;
+use App\Http\Controllers\EmiRepaymentController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ForgetPasswordController;
+use App\Http\Controllers\ProfileDetailsController;
+use App\Http\Controllers\LoanApplicationController;
+use App\Http\Controllers\LoanViewDetailsController;
 
 //Onboarding
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
@@ -22,8 +24,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('forgetPassword', [ForgetPasswordController::class, 'forgetPasswordProcess'])->name('forget-password');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');
 
+
 //dashboard & UI
-Route::get('/dashboard', [DashboardController::class, 'dashboardDetails'])->name('dashboard');
+Route::middleware([JwtAuthMiddleware::class])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    // Other protected routes
+});
+
+
+// Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 Route::get('/loansDetails', [LoanDetailsController::class, 'loansDetails'])->name('loansDetails');
 Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
 Route::get('/txnDetails', [TxnDetailsController::class, 'txnDetails'])->name('txnDetails');

@@ -10,7 +10,7 @@ class LoginController extends Controller
 {
     public function __construct(protected LoginService $loginService)
     {
-        // $this->loginService = $loginService;
+        $this->loginService = $loginService;
     }
 
     public function loginProcess(LoginRequest $loginRequest)
@@ -31,6 +31,7 @@ class LoginController extends Controller
                 'message' => 'Login successful',
                 'data' => [
                     'token' => $responseData['token'],
+                    'refresh_token' => $responseData['refresh_token'],
                     'user' => $responseData['user'],
                 ]
             ], 200);

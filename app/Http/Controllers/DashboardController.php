@@ -2,27 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DashboardRequest;
-use App\Service\DashboardService;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+use App\Constants\CommonConstant;
 
 class DashboardController extends Controller
 {
-    public function __construct(protected DashboardService $dashboardService)
+    /**
+     * Fetch stock ratings using the Seeking Alpha API
+     */
+    public function dashboard(Request $request)
     {
-        $this->dashboardService = $dashboardService;
-    }
+        $url = 'https://seeking-alpha.p.rapidapi.com/symbols/get-ratings';
+        $headers = [
+            'x-rapidapi-host' => 'seeking-alpha.p.rapidapi.com',
+            'x-rapidapi-key' => env('RAPIDAPI_KEY'), // Secure your API key using .env
+            'Accept' => 'application/json',
+        ];
 
-    public function dashboardProcess(DashboardRequest $dashboardRequest)
-    {
+        // Query params: default to 'aapl' or get symbol dynamically
+        $queryParams = [
+            'symbol' => 'aapl', // 'aapl' as the default symbol
+        ];
         try {
-            $responseData = $this->dashboardService->dashboardDetails($dashboardRequest);
-            if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Dashboard details retrieved successfully', 'data' => $responseData['data']], 200);
-            } else {
-                return response()->json(['success' => false,  'message' => 'Failed to retrieve dashboard details'], 200);
+            Log::channel('info')->info('Fetching credit score from API', ['query' => $queryParams]);
+
+            $response = Http::withHeaders($headers)
+                ->timeout(100) // Timeout in seconds
+                // ->asForm()
+                ->withoutVerifying()
+                ->get($url, $queryParams);
+
+            Log::channel('info')->info('API Response for credit score', ['body' => $response->body()]);
+
+            // Parse and check response
+            $responseBody = json_decode($response->body(), true);
+
+            if ($responseBody === null) {
+                Log::channel('error')->error('Invalid JSON response or empty body', ['response' => $response->body()]);
+
+                return response()->json([
+                    'status' => CommonConstant::FAILED_MESSAGE,
+                    'message' => 'Invalid response from API',
+                ], 500);
             }
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
+
+            // Successful API response
+            return response()->json([
+                'status' => CommonConstant::SUCCESS_MESSAGE,
+                'data' => $responseBody,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::channel('critical')->critical('Exception occurred while fetching credit score', [
+                'exception' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'status' => CommonConstant::FAILED_MESSAGE,
+                'message' => 'An error occurred while fetching credit score',
+                'error' => $e->getMessage(),
+            ], 500);
+        } finally {
+            Log::channel('info')->info('credit score API call ended');
         }
     }
 }
