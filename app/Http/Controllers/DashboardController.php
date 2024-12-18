@@ -19,9 +19,7 @@ class DashboardController extends Controller
             'x-rapidapi-host' => 'seeking-alpha.p.rapidapi.com',
             'x-rapidapi-key' => env('RAPIDAPI_KEY'), // Secure your API key using .env
             'Accept' => 'application/json',
-        ];
-
-        // Query params: default to 'aapl' or get symbol dynamically
+        ];  
         $queryParams = [
             'symbol' => 'aapl', // 'aapl' as the default symbol
         ];

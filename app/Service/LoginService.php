@@ -2,8 +2,11 @@
 
 namespace App\Service;
 
-use Tymon\JWTAuth\JWT;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\User; // Ensure your User model is imported
 
 class LoginService
 {
@@ -12,39 +15,30 @@ class LoginService
         $currentDateTime = now();
 
         try {
-            // Get the authenticated user
-            $user = auth('api')->user();
-
-            if (!$user) {
-                Log::channel('warning')->warning("[$currentDateTime]: User not authenticated");
+            // Attempt to authenticate the user
+            if (!$accessToken = auth('api')->attempt($credentials)) {
+                Log::channel('warning')->warning("[$currentDateTime]: Authentication failed for credentials");
                 return [
                     "message" => "Authentication failed",
                     "status" => "fail",
                 ];
             }
+
+            // Get the authenticated user
+            $user = auth('api')->user();
             Log::channel('info')->info("[$currentDateTime]: User authenticated successfully, ID: " . $user->id);
 
-            // Generate Access Token (JWT)
-            $accessPayload = [
-                'iss' => config('app.url'), // The issuer
-                'sub' => $user->id,        // Subject - User ID
-                'iat' => time(),           // Issued at
-                'exp' => time() + (60 * 60) // 1 hour expiration
-            ];
-            $accessToken = JWT::encode($accessPayload, env('JWT_SECRET'), 'HS256');
+            // Generate and store refresh token in Redis
+            $refreshToken = Str::random(60); // Generate a random refresh token
+            // $refreshTokenKey = "refresh_token:$refreshToken";
+            // Redis::setex($refreshTokenKey, 604800, $user->id); // Store in Redis for 7 days (604800 seconds)
 
-            // Generate Refresh Token
-            $refreshPayload = [
-                'iss' => config('app.url'), // The issuer
-                'sub' => $user->id,        // Subject - User ID
-                'iat' => time(),           // Issued at
-                'exp' => time() + (7 * 24 * 60 * 60) // 7 days expiration
-            ];
-            $refreshToken = JWT::encode($refreshPayload, env('JWT_SECRET'), 'HS256');
+              // Store the refresh token in the session
+              session()->put("refresh_token:$refreshToken", $user->id); // Store in session
 
-            // Return both tokens and user data
+            // Return the access token, refresh token, and user data
             return [
-                'token' => $accessToken,
+                'token' => $accessToken,    
                 'refresh_token' => $refreshToken,
                 'user' => $user,
             ];

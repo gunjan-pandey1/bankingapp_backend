@@ -6,6 +6,6 @@ class LoanDetailsService
 {
     public function loansDetails()
     {
-        // Loan details logic will go here
+    
     }
 }

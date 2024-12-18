@@ -16,6 +16,7 @@ use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\ProfileDetailsController;
 use App\Http\Controllers\LoanApplicationController;
 use App\Http\Controllers\LoanViewDetailsController;
+use App\Http\Middleware\AuthenticateWithRefreshToken;
 
 //Onboarding
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
@@ -26,7 +27,7 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 
 
 //dashboard & UI
-Route::middleware([JwtAuthMiddleware::class])->group(function () {
+Route::middleware([AuthenticateWithRefreshToken::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     // Other protected routes
 });
