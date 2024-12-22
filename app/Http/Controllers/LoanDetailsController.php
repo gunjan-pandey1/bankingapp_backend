@@ -15,7 +15,7 @@ class LoanDetailsController extends Controller
     public function loanDetailsProcess(LoanDetailsRequest $loanDetailsRequest)
     {
         try {
-            $responseData = $this->loanDetailsService->loanDetails($loanDetailsRequest);
+            $responseData = $this->loanDetailsService->getActiveLoans($loanDetailsRequest);
             if (strtolower($responseData['status']) == 'success') {
                 return response()->json(['success' => true, 'message' => 'Loan details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {

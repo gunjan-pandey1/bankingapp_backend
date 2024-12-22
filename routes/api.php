@@ -29,12 +29,12 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 //dashboard & UI
 Route::middleware([AuthenticateWithRefreshToken::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/loans', [LoanDetailsController::class, 'loanDetailsProcess'])->name('loansDetails');
     // Other protected routes
 });
 
 
 // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-Route::get('/loansDetails', [LoanDetailsController::class, 'loansDetails'])->name('loansDetails');
 Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
 Route::get('/txnDetails', [TxnDetailsController::class, 'txnDetails'])->name('txnDetails');
 Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');

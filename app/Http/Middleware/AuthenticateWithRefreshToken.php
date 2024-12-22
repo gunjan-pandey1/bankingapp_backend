@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use Tymon\JWTAuth\Http\Middleware\RefreshToken;
-use App\Models\User; // Ensure the User model is imported
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
 
 class AuthenticateWithRefreshToken
 {
@@ -16,9 +15,11 @@ class AuthenticateWithRefreshToken
         $currentDateTime = now();
 
         try {
+
+            Log::channel('info')->info("[$currentDateTime]: Middleware authentication started", $request->all());
             // Check if the access token is valid
             if (auth('api')->check()) {
-                return $next($request); 
+                return $next($request);
             }
 
             // Access token is invalid, check for a refresh token
@@ -26,24 +27,21 @@ class AuthenticateWithRefreshToken
 
             if (!$refreshToken) {
                 Log::channel('warning')->warning("[$currentDateTime]: Missing refresh token");
-                return [
+                return response()->json([
                     "message" => "Unauthorized: Missing refresh token",
                     "status" => "fail",
-                ];
+                ], Response::HTTP_UNAUTHORIZED);
             }
 
-            // $refreshTokenKey = "refresh_token:$refreshToken";
-            // $userId = Redis::get($refreshTokenKey); 
-
             // Check for the user ID in the session instead of Redis
-            $userId = session()->get("refresh_token:$refreshToken"); 
+            $userId = session()->get("refresh_token:$refreshToken");
 
             if (!$userId) {
                 Log::channel('warning')->warning("[$currentDateTime]: Invalid or expired refresh token");
-                return [
+                return response()->json([
                     "message" => "Unauthorized: Invalid or expired refresh token",
                     "status" => "fail",
-                ];
+                ], Response::HTTP_UNAUTHORIZED);
             }
 
             // Retrieve the user using the User model
@@ -51,10 +49,10 @@ class AuthenticateWithRefreshToken
 
             if (!$user) {
                 Log::channel('warning')->warning("[$currentDateTime]: User not found for ID: $userId");
-                return [
+                return response()->json([
                     "message" => "Unauthorized: User not found",
                     "status" => "fail",
-                ];
+                ], Response::HTTP_UNAUTHORIZED);
             }
 
             // Generate a new access token using JWTAuth
@@ -63,10 +61,6 @@ class AuthenticateWithRefreshToken
             // Store the new refresh token in the session
             session()->put("refresh_token:$newRefreshToken", $userId);
 
-            // Update Redis with the new refresh token
-            // Redis::del($refreshTokenKey); // Remove the old refresh token
-            // Redis::setex($newRefreshTokenKey, 604800, $userId); // Store the new refresh token for 7 days
-
             // Add the new tokens to the response headers
             $response = $next($request);
             return $response
@@ -74,10 +68,10 @@ class AuthenticateWithRefreshToken
                 ->header('Refresh-Token', $newRefreshToken);
         } catch (\Exception $e) {
             Log::channel('error')->error("[$currentDateTime]: Middleware authentication error: " . $e->getMessage());
-            return [
+            return response()->json([
                 "message" => "Unauthorized: Server error",
                 "status" => "fail",
-            ];
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

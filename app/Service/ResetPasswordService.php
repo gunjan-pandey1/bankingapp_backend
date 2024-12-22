@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Repository\ResetPasswordRepository;
+use App\Jobs\SendResetPasswordEmail;
+use Illuminate\Support\Facades\Password;
 
 class ResetPasswordService
 {
@@ -22,19 +24,22 @@ class ResetPasswordService
         try {
             $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
             $email = $objectParams->email;
-            $token = $objectParams->token;
+            $token = $objectParams->token; // This token is already provided
             $newPassword = $objectParams->password;
-
-            // Validate token (you may need to modify this logic to match your token validation system)
+    
+            // Validate token
             if (!$this->resetPasswordRepository->isValidToken($email, $token)) {
                 Log::channel('error')->error(message: "[$currentDateTime]: Invalid or expired token: " . json_encode($email, $token));
-                return ['message' => 'Invalid or expired token','status' => 'error', 'data' => []
-                ];
+                return ['message' => 'Invalid or expired token', 'status' => 'error', 'data' => []];
             }
-
+    
             // Update password
             $hashedPassword = Hash::make($newPassword);
             $this->resetPasswordRepository->updatePassword($email, $hashedPassword);
+            
+            // Dispatch the email sending job
+            SendResetPasswordEmail::dispatch($email, $token);
+    
             Log::channel('info')->info('Password updated successfully for email: ' . $email);
             return [
                 'message' => 'Password reset successfully',

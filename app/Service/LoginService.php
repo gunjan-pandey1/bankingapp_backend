@@ -30,11 +30,11 @@ class LoginService
 
             // Generate and store refresh token in Redis
             $refreshToken = Str::random(60); // Generate a random refresh token
-            // $refreshTokenKey = "refresh_token:$refreshToken";
-            // Redis::setex($refreshTokenKey, 604800, $user->id); // Store in Redis for 7 days (604800 seconds)
+            $refreshTokenKey = "refresh_token:$refreshToken";
+            Redis::setex($refreshTokenKey, 604800, $user->id); // Store in Redis for 7 days (604800 seconds)
 
               // Store the refresh token in the session
-              session()->put("refresh_token:$refreshToken", $user->id); // Store in session
+            //   session()->put("refresh_token:$refreshToken", $user->id); // Store in session
 
             // Return the access token, refresh token, and user data
             return [
