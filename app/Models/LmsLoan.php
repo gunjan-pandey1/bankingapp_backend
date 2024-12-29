@@ -14,19 +14,16 @@ class LmsLoan extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id',
+
         'loan_type',
         'amount',
-        'duration_month',
         'interest_rate',
-        'next_payment',
-        'created_date',
-        'updated_date',
-        'created_timestamp',
-        'updated_timestamp',
-        'is_show_flag',
-        'status'
+        'duration_month',
+        'status',
+        'is_show_flag'
     ];
+    const CREATED_AT = 'created_timestamp';
+    const UPDATED_AT = 'updated_timestamp';  
     public function user()
     {
         return $this->belongsTo(LmsUser::class);

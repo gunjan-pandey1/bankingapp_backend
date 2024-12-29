@@ -10,7 +10,6 @@ class CreateLmsLoanTable extends Migration
     {
         Schema::create('lms_loan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('lms_user')->onDelete('cascade');
             $table->string(   'loan_type');
             $table->decimal(  'amount', 15, 2);
             $table->integer('duration_month');

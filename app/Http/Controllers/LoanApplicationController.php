@@ -2,46 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoanApplicationRequest;
-use App\Service\LoanApplicationService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
+use App\Service\LoanApplicationService;
 
 class LoanApplicationController extends Controller
 {
     public function __construct(protected LoanApplicationService $loanApplicationService)
     {
+        $this->loanApplicationService = $loanApplicationService;
     }
 
-    public function loanApplicationProcess(LoanApplicationRequest $loanApplicationRequest)
+    public function getLoans()
     {
+
+        $userId = Redis::get("user_id:$user->id");
         try {
-            Log::channel('info')->info('Loan application attempt', ['data' => $loanApplicationRequest->safe()->all()]);
-            
-            $responseData = $this->loanApplicationService->getActiveLoans();
-            
+            Log::channel('info')->info("LoanApplicationController::getLoans");
+           
+            // $userId = auth()->id();
+            Log::channel('info')->info("LoanApplicationController: User ID from redis: " . json_encode($userId));
+            $responseData = $this->loanApplicationService->getUserLoans($userId);
+            Log::channel('info')->info("LoanApplicationController: " . json_encode($responseData));
             if ($responseData['status'] === 'success') {
                 return response()->json([
-                    'message' => 'Loan application processed successfully',
-                    'data' => $responseData['data']
-                ], 201);
+                    'status' => true,
+                    'message' => $responseData['message'],
+                    'data' => $responseData['data'],
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => $responseData['message'],
+                    'data' => [],
+                ], 500);
             }
-
-            $statusCode = $responseData['message'] === 'Application failed' ? 422 : 400;
-            
-            return response()->json([
-                'message' => $responseData['message'],
-                'errors' => ['application' => [$responseData['message']]]
-            ], $statusCode);
-
         } catch (\Exception $exception) {
-            Log::channel('error')->error('Loan application failed', [
-                'error' => $exception->getMessage(),
-                'trace' => $exception->getTraceAsString()
-            ]);
-
+            Log::error("LoanApplicationController error: " . $exception->getMessage());
             return response()->json([
-                'message' => 'Loan application failed',
-                'errors' => ['server' => ['An unexpected error occurred']]
+                'status' => 'error',
+                'message' => 'An error occurred while fetching loans',
+                'data' => []
             ], 500);
         }
     }

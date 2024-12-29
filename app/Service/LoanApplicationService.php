@@ -2,29 +2,49 @@
 
 namespace App\Service;
 
-use App\Models\LmsLoan;
 use Carbon\Carbon;
+use App\Models\LmsLoan;
+use App\Constants\CommonConstant;
+use App\Repository\LoanRepository;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class LoanApplicationService
 {
-    public function getActiveLoans()
+    public function __construct(protected LoanRepository $loanRepository)
+    {}
+    public function getUserLoans($userId)
     {
-        return LmsLoan::where('is_show_flag', 1)
-            ->where('status', 1)
-            ->orderBy('created_date', 'desc')
-            ->get()
-            ->map(function($loan) {
+        $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
+        try {
+            $userId = Redis::get("user_id:" . session()->get('user_id'));
+            // $userId = auth()->id();
+            Log::channel('info')->info("LoanApplicationService: User ID from session: " . json_encode($userId));
+            $loansdbResponse = $this->loanRepository->getAllLoans($userId);
+            // Transform loans to match frontend format
+            $transformedLoans = $loansdbResponse->map(function ($loan) {
                 return [
-                    'id' => $loan->id,
                     'type' => $loan->loan_type,
-                    'amount' => number_format($loan->amount, 2),
-                    'interest' => number_format($loan->interest_rate, 2),
+                    'amount' => number_format($loan->amount, 0, '.', ''),
+                    'interest' => number_format($loan->interest_rate, 1),
                     'term' => $loan->duration_month,
-                    'status' => 'Active',
-                    'nextPayment' => Carbon::parse($loan->created_date)
-                        ->addMonths(1)
-                        ->format('M d, Y')
+                    'status' => $loan->status,
+                    'nextPayment' => $loan->next_payment_date ?? 'N/A'
                 ];
             });
+
+            return [
+                "message" => "Data fetched successfully",
+                "status" => "success",
+                "data" => $transformedLoans
+            ];
+        } catch (\Throwable $th) {
+            Log::channel('critical')->critical("LoanApplicationService error: " . $th->getMessage());
+            return [
+                "status" => "error",
+                "message" => "Failed to fetch user loans data.",
+                "data" => []
+            ];
+        }
     }
 }

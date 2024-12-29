@@ -4,5 +4,5 @@ namespace App\Repository;
 
 interface LoanRepository {
 
-    public function getActiveLoans();
-}
+    public function getAllLoans($userId);
+}   

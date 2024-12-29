@@ -19,6 +19,7 @@ class AuthenticateWithRefreshToken
             Log::channel('info')->info("[$currentDateTime]: Middleware authentication started", $request->all());
             // Check if the access token is valid
             if (auth('api')->check()) {
+                Log::channel('info')->info("[$currentDateTime]: Access token is valid");
                 return $next($request);
             }
 
@@ -33,8 +34,12 @@ class AuthenticateWithRefreshToken
                 ], Response::HTTP_UNAUTHORIZED);
             }
 
-            // Check for the user ID in the session instead of Redis
-            $userId = session()->get("refresh_token:$refreshToken");
+            // Check if the refresh token exists in Redis
+            $userId = Redis::get("refresh_token:$refreshToken");
+            Log::channel('warning')->warning("Redis Check for Refresh Token:", ['refresh_token' => $userId]);
+            Log::channel('info')->info("Authorization Header:", [$request->header('Authorization')]);
+            Log::channel('info')->info("Refresh-Token Header:", [$request->header('Refresh-Token')]);
+            Log::channel('info')->info("Redis Check Result:", [$userId]);
 
             if (!$userId) {
                 Log::channel('warning')->warning("[$currentDateTime]: Invalid or expired refresh token");
@@ -58,8 +63,8 @@ class AuthenticateWithRefreshToken
             // Generate a new access token using JWTAuth
             $newAccessToken = JWTAuth::fromUser($user);
             $newRefreshToken = \Illuminate\Support\Str::random(60);
-            // Store the new refresh token in the session
-            session()->put("refresh_token:$newRefreshToken", $userId);
+            // Store the new refresh token in Redis
+            Redis::setex("refresh_token:$newRefreshToken", 604800, $userId); // Store in Redis for 7 days (604800 seconds)
 
             // Add the new tokens to the response headers
             $response = $next($request);

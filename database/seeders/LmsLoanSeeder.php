@@ -2,53 +2,85 @@
 
 namespace Database\Seeders;
 
-use App\Models\LmsLoan;
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
+use App\Models\LmsLoan;
 
 class LmsLoanSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * @return void
      */
-    public function run(): void
+    public function run()
     {
-
-        $loanTypes = ['Personal Loan', 'Home Loan', 'Car Loan', 'Business Loan'];
-        $statuses = [
-            0 => 'Pending',
-            1 => 'Active',
-            2 => 'Closed'
-        ];
-        
-        // Generate 20 sample loans
-        for ($i = 0; $i < 20; $i++) {
-            $amount = rand(5000, 50000);
-            $type = $loanTypes[array_rand($loanTypes)];
-            $term = rand(12, 60);
-            
-            // Interest rate based on loan type
-            $interest = match($type) {
-                'Personal Loan' => rand(850, 1500) / 100, // 8.5% - 15%
-                'Home Loan' => rand(650, 900) / 100,     // 6.5% - 9%
-                'Car Loan' => rand(700, 1200) / 100,     // 7% - 12%
-                'Business Loan' => rand(1000, 1800) / 100, // 10% - 18%
-            };
-            
-            LmsLoan::create([
-                'user_id' => rand(1, 10), // Assuming you have 10 users
-                'loan_type' => $type,
-                'amount' => $amount,
-                'interest_rate' => $interest,
-                'duration_month' => $term,
-                'status' => array_rand($statuses),
-                'next_payment' => Carbon::now()->addDays(rand(1, 30)),
-                'created_date' => Carbon::now()->subDays(rand(1, 365)),
-                'updated_date' => Carbon::now(),
-                'created_timestamp' => Carbon::now(),
-                'updated_timestamp' => Carbon::now(),
-                'is_show_flag' => 1,
-            ]);
-        }
+        // Add 5 sample entries to the lms_loan table with created_timestamp and updated_timestamp
+        LmsLoan::insert([
+            [
+                
+                'loan_type' => 'Personal',
+                'amount' => 5000,
+                'interest_rate' => 5.5,
+                'duration_month' => 24,
+                'status' => 1, // Approved
+                'is_show_flag' => true,
+                'created_date' => now(),
+                'updated_date' => now(),
+                'created_timestamp' => now()->format('Y-m-d H:i:s'),
+                'updated_timestamp' => now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                
+                'loan_type' => 'Home',
+                'amount' => 15000,
+                'interest_rate' => 3.2,
+                'duration_month' => 120,
+                'status' => 0, // Pending
+                'is_show_flag' => true,
+                'created_date' => now(),
+                'updated_date' => now(),
+                'created_timestamp' => now()->format('Y-m-d H:i:s'),
+                'updated_timestamp' => now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                
+                'loan_type' => 'Car',
+                'amount' => 10000,
+                'interest_rate' => 4.5,
+                'duration_month' => 60,
+                'status' => 2, // Rejected
+                'is_show_flag' => false,
+                'created_date' => now(),
+                'updated_date' => now(),
+                'created_timestamp' => now()->format('Y-m-d H:i:s'),
+                'updated_timestamp' => now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                
+                'loan_type' => 'Business',
+                'amount' => 25000,
+                'interest_rate' => 6.0,
+                'duration_month' => 48,
+                'status' => 1, // Approved
+                'is_show_flag' => true,
+                'created_date' => now(),
+                'updated_date' => now(),
+                'created_timestamp' => now()->format('Y-m-d H:i:s'),
+                'updated_timestamp' => now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                
+                'loan_type' => 'Education',
+                'amount' => 7000,
+                'interest_rate' => 4.0,
+                'duration_month' => 36,
+                'status' => 0, // Pending
+                'is_show_flag' => true,
+                'created_date' => now(),
+                'updated_date' => now(),
+                'created_timestamp' => now()->format('Y-m-d H:i:s'),
+                'updated_timestamp' => now()->format('Y-m-d H:i:s'),
+            ],
+        ]);
     }
 }

@@ -22,7 +22,6 @@ class RegisterService
                 "id" => $registerParams->id ?? null,
             ];
             Log::channel('info')->info("[$currentDateTime]: DB response from registerGet: " . json_encode($registerGetBo));
-    
             $registerDbResponse = $this->registerRepository->registerGet($registerGetBo);
             if ($registerDbResponse) {
                 Log::channel('error')->error("[$currentDateTime]: registerDbResponse: " . json_encode($registerDbResponse));
@@ -35,7 +34,6 @@ class RegisterService
                 "password" => $registerParams->password,
             ];
             Log::channel('info')->info("Data to be inserted: " . json_encode($registerInsertBo));
-    
             $registerDbResponse = $this->registerRepository->registerCreate($registerInsertBo);
             Log::channel('info')->info("[$currentDateTime] User ID: $registerParams->id - user registration started", ['registerParams' => $registerDbResponse]);
     
