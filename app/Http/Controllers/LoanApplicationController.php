@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use App\Service\LoanApplicationService;
+use Illuminate\Support\Facades\Session;
 
 class LoanApplicationController extends Controller
 {
@@ -16,11 +17,10 @@ class LoanApplicationController extends Controller
     public function getLoans()
     {
 
-        $userId = Redis::get("user_id:$user->id");
+        $userId = Session::get("user_id");
         try {
             Log::channel('info')->info("LoanApplicationController::getLoans");
            
-            // $userId = auth()->id();
             Log::channel('info')->info("LoanApplicationController: User ID from redis: " . json_encode($userId));
             $responseData = $this->loanApplicationService->getUserLoans($userId);
             Log::channel('info')->info("LoanApplicationController: " . json_encode($responseData));

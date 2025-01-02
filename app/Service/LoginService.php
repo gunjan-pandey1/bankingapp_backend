@@ -3,10 +3,8 @@
 namespace App\Service;
 
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User; // Ensure your User model is imported
+use Illuminate\Support\Facades\Session;
 
 class LoginService
 {
@@ -30,10 +28,9 @@ class LoginService
 
             // Generate and store refresh token in Redis
             $refreshToken = Str::random(60); // Generate a random refresh token
-            $refreshTokenKey = "refresh_token:$refreshToken";
-            Redis::setex($refreshTokenKey, 604800, $user->id); // Store in Redis for 7 days (604800 seconds)    
-            Redis::setex("user_id:$user->id", 604800, $user->id);
-            Redis::setex("email:$user->email", 604800, $user->email);
+            Session::put('refresh_token', $refreshToken);
+            Session::put('user_id', $user->id);
+            Session::put('email', $user->email);
        
             Log::channel('info')->info('Session user_id set: ' . session()->get('user_id'));
 

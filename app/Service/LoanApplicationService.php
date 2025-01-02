@@ -17,8 +17,6 @@ class LoanApplicationService
     {
         $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
         try {
-            $userId = Redis::get("user_id:" . session()->get('user_id'));
-            // $userId = auth()->id();
             Log::channel('info')->info("LoanApplicationService: User ID from session: " . json_encode($userId));
             $loansdbResponse = $this->loanRepository->getAllLoans($userId);
             // Transform loans to match frontend format
