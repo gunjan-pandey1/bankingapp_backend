@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use App\Repository\DashboardRepository;
+use Illuminate\Support\Facades\Session;
 
 
 class DashboardService
@@ -17,12 +18,9 @@ class DashboardService
     public function dashboardDetails()
     {
         $currentDateTime = Carbon::now()->format('Y-m-d H:i:s');
-        Log::channel('info')->info('Session data: ' . json_encode(session()->all()));
+        $userId = Redis::get('user_id');        
+        Log::channel('info')->info("DashboardService: User ID from session: " . $userId);
 
-        $userId = Redis::get("user_id:" . session()->get('user_id'));
-        Log::channel('info')->info("DashboardService: User ID from session: " . json_encode($userId));
-
-    
         try {
             // Credit Score API Call
             $url = 'https://seeking-alpha.p.rapidapi.com/symbols/get-ratings';

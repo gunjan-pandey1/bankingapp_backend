@@ -16,13 +16,9 @@ class LoanApplicationController extends Controller
 
     public function getLoans()
     {
-
-        $userId = Session::get("user_id");
         try {
             Log::channel('info')->info("LoanApplicationController::getLoans");
-           
-            Log::channel('info')->info("LoanApplicationController: User ID from redis: " . json_encode($userId));
-            $responseData = $this->loanApplicationService->getUserLoans($userId);
+            $responseData = $this->loanApplicationService->getUserLoans();
             Log::channel('info')->info("LoanApplicationController: " . json_encode($responseData));
             if ($responseData['status'] === 'success') {
                 return response()->json([

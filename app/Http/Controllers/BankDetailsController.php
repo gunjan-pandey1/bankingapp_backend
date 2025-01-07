@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controller;
 use App\Service\BankDetailsService;
+use App\Http\Requests\BankDetailsRequest;
+use Illuminate\Support\Facades\Log;
 
 class BankDetailsController extends Controller
 {
@@ -13,14 +16,27 @@ class BankDetailsController extends Controller
 
     public function bankDetailsProcess(BankDetailsRequest $bankDetailsRequest)
     {
+        Log::channel('info')->info('Bank details attempt', ['data' => $bankDetailsRequest->safe()->all()]);
         try {
-            $responseData = $this->bankDetailsService->bankDetails($bankDetailsRequest);
-            if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Bank details added successfully', 'data' => $responseData['data']], 200);
-            } else {
-                return response()->json(['success' => false,  'message' => 'Bank details not added'], 200);
+            $responseData = $this->bankDetailsService->saveBankDetails($bankDetailsRequest);
+            if ($responseData['status'] === 'success') {
+                return response()->json([
+                    'message' => 'Bank details submitted successfully',
+                    'data' => $responseData['data']
+                ], 201);
             }
+            $statusCode = $responseData['message'] === 'Bank details already exist for user' ? 422 : 400;
+
+            return response()->json([
+                'message' => $responseData['message'],
+                'errors' => ['email' => [$responseData['message']]]
+            ], $statusCode);
+
         } catch (\Exception $exception) {
+            Log::channel('error')->error('Bank details failed', [
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }

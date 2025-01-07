@@ -25,19 +25,18 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 
 
 //dashboard & UI
-Route::middleware(['auth:api'])->group(function () {
+// Route::middleware(['web'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-});
+// });
 
 Route::get('/loans', [LoanApplicationController::class, 'getLoans'])->name('loans.index');
 
-// Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');
 Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
 Route::get('/txnDetails', [TxnDetailsController::class, 'txnDetails'])->name('txnDetails');
-Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');
 
 //Loan Application Process
-Route::post('/bankDetails', [BankDetailsController::class, 'bankDetails'])->name('bankDetails');
+Route::post('/bankDetails', [BankDetailsController::class, 'storeBankDetails'])->name('bankDetails');
 Route::post('/emiRepayment', [EmiRepaymentController::class, 'emiRepayment'])->name('emiRepayment');
 
 //ADMIN LEVEL

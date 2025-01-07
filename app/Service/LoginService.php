@@ -2,8 +2,9 @@
 
 namespace App\Service;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 
 class LoginService
@@ -28,12 +29,11 @@ class LoginService
 
             // Generate and store refresh token in Redis
             $refreshToken = Str::random(60); // Generate a random refresh token
-            Session::put('refresh_token', $refreshToken);
-            Session::put('user_id', $user->id);
-            Session::put('email', $user->email);
-       
-            Log::channel('info')->info('Session user_id set: ' . session()->get('user_id'));
-
+            // Store refresh token and user data in Redis
+            Redis::set('refresh_token', $refreshToken);
+            Redis::set('user_id', $user->id);
+            Redis::set('email', $user->email);
+           
             // Return the access token, refresh token, and user data
             return [
                 'token' => $accessToken,    

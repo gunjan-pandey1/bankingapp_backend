@@ -21,7 +21,7 @@ class LoanRepositoryImpl implements LoanRepository
     public function getAllLoans($userId)
     {
         try {
-            $this->logHelper->logInfo(['user_id' => $userId],"Getting all loans");
+            $this->logHelper->logInfo($userId,"Getting all loans");
             // Retrieve all loans with the necessary columns
             return LmsLoan::select(
                 'loan_type',
@@ -29,11 +29,9 @@ class LoanRepositoryImpl implements LoanRepository
                 'interest_rate',
                 'duration_month',
                 'status',
-                'next_payment_date',
                 'created_date',
                 'updated_date'
             )
-            ->where('user_id', $userId)
             ->where('is_show_flag', true)
             ->get();
         } catch (\Exception $e) {

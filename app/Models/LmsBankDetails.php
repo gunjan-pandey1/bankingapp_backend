@@ -14,6 +14,18 @@ class LmsBankDetails extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        // Add your fillable attributes here
+        'user_id',
+        'bank_name',
+        'account_number',
+        'account_holder_name',
+        'ifsc_code',
+        'branch_name',        
     ];
+    const CREATED_AT = 'created_timestamp';
+    const UPDATED_AT = 'updated_timestamp';  
+
+    public function user()
+    {
+        return $this->belongsTo(LmsUser::class);
+    }
 }
