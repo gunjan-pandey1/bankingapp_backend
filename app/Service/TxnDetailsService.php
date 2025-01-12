@@ -2,10 +2,19 @@
 
 namespace App\Service;
 
+use App\Repository\TxnDetailsRepository;
+
 class TxnDetailsService
 {
-    public function txnDetails()
+    protected $txnDetailsRepository;
+
+    public function __construct(TxnDetailsRepository $txnDetailsRepository)
     {
-        // Transaction details logic will go here
+        $this->txnDetailsRepository = $txnDetailsRepository;
+    }
+
+    public function getUserTransactions($userId)
+    {
+        return $this->txnDetailsRepository->getUserTransactions($userId);
     }
 }

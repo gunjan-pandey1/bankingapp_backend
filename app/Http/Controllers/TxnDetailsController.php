@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TxnDetailsRequest;
 use App\Service\TxnDetailsService;
+use App\Http\Requests\TxnDetailsRequest;
+use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 class TxnDetailsController extends Controller
 {
@@ -15,7 +16,10 @@ class TxnDetailsController extends Controller
     public function txnDetailsProcess(TxnDetailsRequest $txnDetailsRequest)
     {
         try {
-            $responseData = $this->txnDetailsService->txnDetails($txnDetailsRequest);
+            // $responseData = $this->txnDetailsService->txnDetailsProcess($txnDetailsRequest->all());
+            $userId = Auth::id();
+            $transactions = $this->txnDetailsService->getUserTransactions($userId);
+
             if (strtolower($responseData['status']) == 'success') {
                 return response()->json(['success' => true, 'message' => 'Transaction details retrieved successfully', 'data' => $responseData['data']], 200);
             } else {

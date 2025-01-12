@@ -15,6 +15,8 @@ use App\Http\Controllers\LoanApplicationController;
 use App\Http\Controllers\LoanApplyController;
 use App\Http\Controllers\LoanViewDetailsController;
 
+use App\Http\Controllers\ReferralController;
+
 //Onboarding
 Route::post('/register', [RegisterController::class, 'registerprocess'])->name('register');
 Route::post('/login', [LoginController::class, 'loginprocess'])->name('login');
@@ -22,6 +24,14 @@ Route::post('/login', [LoginController::class, 'loginprocess'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('forgetPassword', [ForgetPasswordController::class, 'forgetPasswordProcess'])->name('forget-password');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');
+Route::prefix('profile')->group(function () {
+    Route::post('/bank-details', [BankDetailsController::class, 'bankDetailsProcess']);
+    Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/referral/generate', [ReferralController::class, 'generateReferral']);
+        Route::post('/referral/validate', [ReferralController::class, 'validateReferral']);
+    });
+});
 
 
 //dashboard & UI
@@ -29,14 +39,15 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 // });
 
+
+
+
 Route::get('/loans', [LoanApplicationController::class, 'getLoans'])->name('loans.index');
 
-Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');
 Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
 Route::get('/txnDetails', [TxnDetailsController::class, 'txnDetails'])->name('txnDetails');
 
 //Loan Application Process
-Route::post('/bankDetails', [BankDetailsController::class, 'storeBankDetails'])->name('bankDetails');
 Route::post('/emiRepayment', [EmiRepaymentController::class, 'emiRepayment'])->name('emiRepayment');
 
 //ADMIN LEVEL

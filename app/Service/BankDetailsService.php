@@ -19,7 +19,7 @@ class BankDetailsService
             $bankDetailsGetBo = [
                 "user_id" => $userId
             ];
-            Log::channel('info')->info("[$currentDateTime]: Checking existing bank details: " . json_encode($bankDetailsGetBo));
+            Log::channel('info')->info("[$currentDateTime]: Checking existing bank details: " . $bankDetailsGetBo);
             $existingDetails = $this->bankDetailsRepository->getBankDetails($bankDetailsGetBo);
 
             $bankDetailsInsertBo = [
@@ -30,9 +30,9 @@ class BankDetailsService
                 "bank_name" => $bankDetailsRequestparam->bank_name
             ];
 
-            Log::channel('info')->info("Data to be processed: " . json_encode($bankDetailsInsertBo));
+            Log::channel('info')->info("Data to be processed: " . $bankDetailsInsertBo);
             if ($existingDetails) {
-                Log::channel('error')->error("[$currentDateTime]: Bank details already exist for user: " . json_encode($existingDetails));
+                Log::channel('error')->error("[$currentDateTime]: Bank details already exist for user: " . $existingDetails);
                 return ['status' => 'error', 'message' => 'Bank details already exist for user', "data" => []];
             }
             
