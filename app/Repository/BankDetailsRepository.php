@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 
+
 interface BankDetailsRepository {
 
     public function createBankDetails(array $bankDetailsInsertBo);

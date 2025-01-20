@@ -30,6 +30,8 @@ class LoginService
             // Generate and store refresh token in Redis
             $refreshToken = Str::random(60); // Generate a random refresh token
             // Store refresh token and user data in Redis
+            Redis::set('access_token', $accessToken);
+            
             Redis::set('refresh_token', $refreshToken);
             Redis::set('user_id', $user->id);
             Redis::set('email', $user->email);

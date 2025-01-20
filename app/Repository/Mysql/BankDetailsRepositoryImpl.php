@@ -13,6 +13,7 @@ class BankDetailsRepositoryImpl implements BankDetailsRepository
 
     public function createBankDetails(array $bankDetailsInsertBo)
     {
+        Log::info("hiiii in the bank details repository impl");
         try {
             $this->logHelper->logInfo(json_encode($bankDetailsInsertBo), 'Creating bank details: '.json_encode($bankDetailsInsertBo));
 
@@ -27,7 +28,9 @@ class BankDetailsRepositoryImpl implements BankDetailsRepository
 
     public function updateBankDetails(array $bankDetailsUpdateBo)
     {
+        Log::info("hiiii in the bank details repository impl in update");
         try {
+
             $this->logHelper->logInfo(json_encode($bankDetailsUpdateBo), 'Updating bank details: '.json_encode($bankDetailsUpdateBo));
 
             $bankDetails = LmsBankDetails::where('user_id', $bankDetailsUpdateBo['user_id'])
@@ -47,13 +50,14 @@ class BankDetailsRepositoryImpl implements BankDetailsRepository
 
     public function getBankDetails(array $bankDetailsGetBo)
     {
+        Log::channel('info')->info("hiiii in the bank details repository impl in get");
         $userId = $bankDetailsGetBo['user_id'] ?? null;
-        $this->logHelper->logInfo(json_encode($bankDetailsGetBo), "Get bank details: ".json_encode($bankDetailsGetBo));
-    
+        Log::channel('info')->info("User ID: $userId");
         try {
             $this->logHelper->logInfo($userId, 'Getting bank details for user: '.$userId);
     
             $bankDetails = LmsBankDetails::where('user_id', $userId)->first();
+
             return $bankDetails ? $bankDetails->toArray() : false;
         } catch (\Exception $e) {
             $this->logHelper->logCritical($userId, 'Error getting bank details for user: '.$userId);
