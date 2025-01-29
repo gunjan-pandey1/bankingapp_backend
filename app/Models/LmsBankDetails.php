@@ -18,8 +18,7 @@ class LmsBankDetails extends Model
         'bank_name',
         'account_number',
         'account_holder_name',
-        'ifsc_code',
-        'branch_name',        
+        'ifsc_code'    
     ];
     const CREATED_AT = 'created_timestamp';
     const UPDATED_AT = 'updated_timestamp';  

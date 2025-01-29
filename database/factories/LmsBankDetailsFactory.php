@@ -21,7 +21,6 @@ class LmsBankDetailsFactory extends Factory
             'account_number' => $this->faker->bankAccountNumber,
             'bank_name' => $this->faker->bank,
             'ifsc_code' => $this->faker->regexify('[A-Z]{4}0[A-Z0-9]{6}'),
-            'branch_name' => $this->faker->city,
         ];
     }
 }

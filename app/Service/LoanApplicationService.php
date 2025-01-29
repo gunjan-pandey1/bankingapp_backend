@@ -20,8 +20,11 @@ class LoanApplicationService
         try {
             $userId = Redis::get('user_id');
             Log::channel('info')->info("LoanApplicationService: User ID from session: " . $userId);
+    
+            // Get all loans
             $loansdbResponse = $this->loanRepository->getAllLoans($userId);
             Log::channel('info')->info("LoanApplicationService: Loans data: " . json_encode($loansdbResponse));         
+    
             // Transform loans to match frontend format
             $transformedLoans = $loansdbResponse->map(function ($loan) {
                 return [
@@ -33,17 +36,41 @@ class LoanApplicationService
                     'nextPayment' => $loan->next_payment_date ?? 'N/A'
                 ];
             });
-
+    
+            // Get all banks
+            $banks = $this->loanRepository->getAllBanks($userId);
+            Log::channel('info')->info("LoanApplicationService: Banks data: " . json_encode($banks));
+            
+            if (!$banks) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Bank details not found',
+                    'data' => [
+                        'banks' => []
+                    ]
+                ];
+            }
+    
+            $transformedBanks = $banks->map(function ($bank) {
+                return [
+                    'bankName' => $bank->bank_name,
+                ];
+            });
+    
+            Log::channel('info')->info("LoanApplicationService: Transformed banks data: " . json_encode($transformedBanks));
+            
             return [
                 "message" => "Data fetched successfully",
                 "status" => "success",
-                "data" => $transformedLoans
+                "data" => [
+                    'banks' => $transformedBanks
+                ]
             ];
         } catch (\Throwable $th) {
             Log::channel('critical')->critical("LoanApplicationService error: " . $th->getMessage());
             return [
                 "status" => "error",
-                "message" => "Failed to fetch user loans data.",
+                "message" => "Failed to fetch user loans and bank data.",
                 "data" => []
             ];
         }

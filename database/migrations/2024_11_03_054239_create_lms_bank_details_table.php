@@ -15,11 +15,10 @@ class CreateLmsBankDetailsTable extends Migration
             $table->string('account_number')->unique();
             $table->string('account_holder_name');
             $table->string('ifsc_code');
-            $table->text('branch_name');
-            $table->date('created_date');
-            $table->date('updated_date');
-            $table->dateTime('created_timestamp');
-            $table->dateTime('updated_timestamp');
+            $table->date('created_date')->nullable();
+            $table->date('updated_date')->nullable();
+            $table->dateTime('created_timestamp')->nullable();
+            $table->dateTime('updated_timestamp')->nullable();
             $table->tinyInteger('is_show_flag')->default(1);
             $table->tinyInteger('status')->default(1);
 

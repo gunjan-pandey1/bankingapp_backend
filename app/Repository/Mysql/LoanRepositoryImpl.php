@@ -5,6 +5,7 @@ namespace App\Repository\Mysql;
 use Carbon\Carbon;
 use App\Models\LmsLoan;
 use App\Common\LogHelper;
+use App\Models\LmsBankDetails;
 use App\Repository\LoanRepository;
 use Illuminate\Support\Facades\Log;
 
@@ -36,6 +37,24 @@ class LoanRepositoryImpl implements LoanRepository
             ->get();
         } catch (\Exception $e) {
             $this->logHelper->logCritical($e->getMessage(), 'Error getting active loans');
+            return [];
+        }
+    }
+
+    public function getAllBanks($userId)
+    {
+        try {
+            $this->logHelper->logInfo($userId,"Getting bank details");
+            return LmsBankDetails::select(
+                'account_number',
+                'ifsc',
+                'bank_name',
+                'branch_name'
+            )
+            ->where('user_id', $userId)
+            ->get();
+        } catch (\Exception $e) {
+            $this->logHelper->logCritical($e->getMessage(), 'Error getting bank details');
             return [];
         }
     }

@@ -20,11 +20,15 @@ class LoanApplicationController extends Controller
             Log::channel('info')->info("LoanApplicationController::getLoans");
             $responseData = $this->loanApplicationService->getUserLoans();
             Log::channel('info')->info("LoanApplicationController: " . json_encode($responseData));
+            
             if ($responseData['status'] === 'success') {
                 return response()->json([
                     'status' => true,
                     'message' => $responseData['message'],
-                    'data' => $responseData['data'],
+                    'data' => [
+                        'loans' => $responseData['data']['loans'],
+                        'banks' => $responseData['data']['banks'],
+                    ],
                 ], 200);
             } else {
                 return response()->json([
@@ -37,7 +41,7 @@ class LoanApplicationController extends Controller
             Log::error("LoanApplicationController error: " . $exception->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while fetching loans',
+                'message' => 'An error occurred while fetching loans and bank details',
                 'data' => []
             ], 500);
         }

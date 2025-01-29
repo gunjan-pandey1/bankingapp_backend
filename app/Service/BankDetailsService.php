@@ -28,17 +28,24 @@ class BankDetailsService
             Log::channel('info')->info("Search criteria for existing bank details: " . json_encode($bankDetailsGetBo));
     
             // Check for existing bank details
-            // $existingDetails = $this->bankDetailsRepository->getBankDetails($bankDetailsGetBo);
-            // Log::channel('info')->info("Calling getBankDetails with: " . json_encode($bankDetailsGetBo));
-    
-            // Log::channel('info')->info("Bank details request param: " . json_encode($bankDetailsRequestparam));
+            $existingDetails = $this->bankDetailsRepository->getBankDetails($bankDetailsGetBo);
+            if ($existingDetails) {
+                Log::channel('error')->error("[$currentDateTime]: bank details DbResponse: " . json_encode($existingDetails));
+                return ['status' => CommonConstant::ERROR, 'message' => 'Bank details already exists', "data" => []];
+            }
+            Log::channel('info')->info("Calling getBankDetails with: " . json_encode($bankDetailsGetBo));
+            
+            Log::channel('info')->info("Bank details request param: " . json_encode($bankDetailsRequestparam->all()));
+            
             // Prepare bank details data for insert/update
             $bankDetailsInsertBo = [
                 "user_id" => $userId,
-                "account_holder_name" => $bankDetailsRequestparam->account_name,
-                "account_number" => $bankDetailsRequestparam->account_number,
-                "ifsc_code" => $bankDetailsRequestparam->ifsc_code,
-                "bank_name" => $bankDetailsRequestparam->bank_name
+                "account_holder_name" => $bankDetailsRequestparam->accountName,
+                "account_number" => $bankDetailsRequestparam->accountNumber,
+                "ifsc_code" => $bankDetailsRequestparam->ifscCode,
+                "bank_name" => $bankDetailsRequestparam->bankName,
+                "created_date" => now()->format('d-m-Y'),
+                "updated_date" => now()->format('d-m-Y')
             ];
     
             Log::channel('info')->info("Data to be processed: " . json_encode($bankDetailsInsertBo));
