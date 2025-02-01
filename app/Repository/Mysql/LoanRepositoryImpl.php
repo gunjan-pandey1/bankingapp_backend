@@ -47,9 +47,8 @@ class LoanRepositoryImpl implements LoanRepository
             $this->logHelper->logInfo($userId,"Getting bank details");
             return LmsBankDetails::select(
                 'account_number',
-                'ifsc',
+                'ifsc_code',
                 'bank_name',
-                'branch_name'
             )
             ->where('user_id', $userId)
             ->get();

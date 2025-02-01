@@ -36,6 +36,7 @@ class LoanApplicationService
                     'nextPayment' => $loan->next_payment_date ?? 'N/A'
                 ];
             });
+            Log::channel('info')->info("LoanApplicationService: Transformed loan data: " . json_encode($transformedLoans));
     
             // Get all banks
             $banks = $this->loanRepository->getAllBanks($userId);
@@ -63,6 +64,7 @@ class LoanApplicationService
                 "message" => "Data fetched successfully",
                 "status" => "success",
                 "data" => [
+                    'loans' => $transformedLoans,
                     'banks' => $transformedBanks
                 ]
             ];

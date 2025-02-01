@@ -27,7 +27,6 @@ Route::post('forgetPassword', [ForgetPasswordController::class, 'forgetPasswordP
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('reset-password');
 
 // Route::prefix('profile')->group(function () {
-    Log::channel('info')->info("Bank Details Route accessed");
     Route::post('/bank-details', [BankDetailsController::class, 'bankDetailsProcess'])->name('bank-details-process');
     Route::get('/profileDetails', [ProfileDetailsController::class, 'profileDetails'])->name('profileDetails');
     // Route::middleware('auth:sanctum')->group(function () {
@@ -47,7 +46,7 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 
 Route::get('/loans', [LoanApplicationController::class, 'getLoans'])->name('loans.index'); 
 
-Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
+// Route::get('/loanViewDetails', [LoanViewDetailsController::class, 'loanViewDetails'])->name('loanViewDetails');
 Route::get('/txnDetails', [TxnDetailsController::class, 'txnDetails'])->name('txnDetails');
 
 //Loan Application Process
