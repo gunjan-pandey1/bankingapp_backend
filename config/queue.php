@@ -61,6 +61,17 @@ return [
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'after_commit' => false,
         ],
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'host' => env('RABBITMQ_HOST', '192.168.1.10'),
+            'port' => env('RABBITMQ_PORT', 5672),
+            'user' => env('RABBITMQ_USER', 'guest'),
+            'password' => env('RABBITMQ_PASSWORD', 'guest'),
+            'queue' => env('RABBITMQ_QUEUE', 'forgot_password_queue'),
+            'retry_after' => 90,
+            'block_for' => null,
+            'after_commit' => false,
+        ],
 
         'redis' => [
             'driver' => 'redis',

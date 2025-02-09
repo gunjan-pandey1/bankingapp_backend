@@ -18,8 +18,7 @@ class ForgetPasswordService
         protected ForgetPasswordEmailRepository $forgetPasswordEmailRepository,
         protected EncryptionHelper $encryptionHelper
     ) {
-        // Set the queue name from the config file
-        $this->queueName = config('queue.connections.rabbitmq.queue');
+        $this->queueName = config('queue.connections.rabbitmq.queue', 'forgot_password_queue');
     }
 
     public function forgetPassword(object $objectParams)
@@ -31,24 +30,27 @@ class ForgetPasswordService
             $emailSentBo = ["email" => $email];
 
             // Check if email exists
-            $emailsentResponse = $this->forgetPasswordEmailRepository->sendEmailExists($emailSentBo);
-            if (!$emailsentResponse) {
-                Log::channel('error')->error("[$currentDateTime] Email does not exist");
+            $emailExists = $this->forgetPasswordEmailRepository->sendEmailExists($emailSentBo);
+            if (!$emailExists) {
+                Log::channel('error')->error("[$currentDateTime] Email does not exist: $email");
                 return ["message" => "Email does not exist", "status" => "error", "data" => []];
             }
 
             // Generate a secure token
             $token = $this->encryptionHelper->generateToken(30);
 
-            // Publish the email data to RabbitMQ
-            $this->publishToQueue([
+            // Prepare email data
+            $emailData = [
                 'email' => $email,
                 'token' => $token,
-            ]);
+            ];
+
+            // Publish to RabbitMQ
+            $this->publishToQueue($emailData);
 
             Log::channel('info')->info("[$currentDateTime] Email queued successfully: " . $email);
 
-            return ["message" => "Email queued successfully", "status" => "success", "data" => []];
+            return ["message" => "Reset email queued successfully", "status" => "success", "data" => []];
         } catch (Exception $e) {
             Log::channel('error')->error("[$currentDateTime] Error in queuing email: " . $e->getMessage());
             return [
@@ -68,29 +70,24 @@ class ForgetPasswordService
     private function publishToQueue(array $data)
     {
         try {
-            $host = config('queue.connections.rabbitmq.hosts.0.host');
-            $port = config('queue.connections.rabbitmq.hosts.0.port');
-            $user = config('queue.connections.rabbitmq.hosts.0.user');
-            $password = config('queue.connections.rabbitmq.hosts.0.password');
+            $host = config('queue.connections.rabbitmq.host');
+            $port = config('queue.connections.rabbitmq.port');
+            $user = config('queue.connections.rabbitmq.user');
+            $password = config('queue.connections.rabbitmq.password');
 
-            // Establish connection to RabbitMQ
             $connection = new AMQPStreamConnection($host, $port, $user, $password);
             $channel = $connection->channel();
 
-            // Declare the queue
             $channel->queue_declare($this->queueName, false, true, false, false);
 
-            // Create the message with a JSON payload
             $messageBody = json_encode($data);
             $message = new AMQPMessage(
                 $messageBody,
                 ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT] // Make the message persistent
             );
 
-            // Publish the message to the queue
             $channel->basic_publish($message, '', $this->queueName);
 
-            // Close the channel and connection
             $channel->close();
             $connection->close();
         } catch (Exception $e) {
