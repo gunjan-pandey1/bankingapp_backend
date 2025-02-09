@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Service\TxnDetailsService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use App\Http\Requests\TxnDetailsRequest;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 
@@ -13,15 +15,16 @@ class TxnDetailsController extends Controller
         $this->txnDetailsService = $txnDetailsService;
     }
 
-    public function txnDetailsProcess(TxnDetailsRequest $txnDetailsRequest)
+    public function txnDetailsProcess()
     {
+        Log::channel('info')->info("TxnDetailsController: User ID " . Redis::get('user_id'));
         try {
-            // $responseData = $this->txnDetailsService->txnDetailsProcess($txnDetailsRequest->all());
-            $userId = Auth::id();
-            $transactions = $this->txnDetailsService->getUserTransactions($userId);
-
-            if (strtolower($responseData['status']) == 'success') {
-                return response()->json(['success' => true, 'message' => 'Transaction details retrieved successfully', 'data' => $responseData['data']], 200);
+            $userId = Redis::get('user_id');
+            Log::channel('info')->info("TxnDetailsController: User ID " . $userId);
+            $transactionsResponse = $this->txnDetailsService->getUserTransactions($userId);
+            Log::channel('info')->info("TxnDetailsController: Transactions response " . json_encode($transactionsResponse));
+            if (strtolower($transactionsResponse['status']) == 'success') {
+                return response()->json(['success' => true, 'message' => 'Transaction details retrieved successfully', 'data' => $transactionsResponse['data']], 200);
             } else {
                 return response()->json(['success' => false,  'message' => 'Failed to retrieve transaction details'], 200);
             }

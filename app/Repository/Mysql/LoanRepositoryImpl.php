@@ -24,7 +24,7 @@ class LoanRepositoryImpl implements LoanRepository
         try {
             $this->logHelper->logInfo($userId,"Getting all loans");
             // Retrieve all loans with the necessary columns
-            return LmsLoan::select(
+            return LmsLoan::select( 'id',
                 'loan_type',
                 'amount',
                 'interest_rate',
@@ -46,6 +46,7 @@ class LoanRepositoryImpl implements LoanRepository
         try {
             $this->logHelper->logInfo($userId,"Getting bank details");
             return LmsBankDetails::select(
+                'id',
                 'account_number',
                 'ifsc_code',
                 'bank_name',

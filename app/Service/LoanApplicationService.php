@@ -28,6 +28,7 @@ class LoanApplicationService
             // Transform loans to match frontend format
             $transformedLoans = $loansdbResponse->map(function ($loan) {
                 return [
+                    'loan_id' => $loan->id,
                     'type' => $loan->loan_type,
                     'amount' => number_format($loan->amount, 0, '.', ''),
                     'interest' => number_format($loan->interest_rate, 1),
@@ -54,6 +55,7 @@ class LoanApplicationService
     
             $transformedBanks = $banks->map(function ($bank) {
                 return [
+                    'id' => $bank->id,
                     'bankName' => $bank->bank_name,
                 ];
             });

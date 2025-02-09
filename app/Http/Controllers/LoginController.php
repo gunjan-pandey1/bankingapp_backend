@@ -19,6 +19,7 @@ class LoginController extends Controller
             Log::channel('info')->info("LoginController::loginProcess", $loginRequest->toArray());
             $credentials = $loginRequest->only('email', 'password');
             $responseData = $this->loginService->login($credentials);
+            Log::channel('info')->info("LoginController::loginProcess response", $responseData);
             if (!$responseData || isset($responseData['status']) && $responseData['status'] === 'fail') {
                 return response()->json([
                     'success' => false,

@@ -15,5 +15,20 @@ class LmsTransaction extends Model
 
     protected $fillable = [
         // Add your fillable attributes here
+        'user_id',
+        'loan_id',
+        'transaction_type',
+        'transaction_amount',
+        'created_timestamp',
+        'description',
+        'txnDate'
     ];
+
+    const CREATED_AT = 'created_timestamp';
+    const UPDATED_AT = 'updated_timestamp'; 
+
+    public function loan()
+    {
+        return $this->belongsTo(LmsLoan::class);
+    }
 }

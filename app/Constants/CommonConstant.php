@@ -6,26 +6,9 @@ use Carbon\Carbon;
 
 class CommonConstant
 {
-    public const DAILY_HOME_LIMIT = 1;
 
-    public const PERDAY_LIMIT = 1;
 
-    public const DAILY_ROMING_LIMIT = 1;
-
-    public const BLOCK_AMOUNT = 1;
-
-    public const IS_MANUAL = 1;
-
-    public const IS_NOT_MANUAL = 0;
-
-    public const IS_SHOW_FLAG = 1;
-
-    public const IS_NOT_SHOW_FLAG = 0;
-
-    public const IS_ACTIVE_FLAG = 1;
-
-    public const IS_NOT_ACTIVE_FLAG = 0;
-
+   
     public const SUCCESS_CODE = 200;
 
     public const FAILED_CODE = 500;
@@ -59,41 +42,17 @@ class CommonConstant
 
     public const SERVER = 'recharge_supply';
 
-    public const METHOD = 'walletApi';
 
-    public const TYPE = 'cr';
-
-    public const SETTLE_FLAG = 1;
-
-    public const SOURCE = 'web';
-
-    public const SERVICE_CHARGE = 0;
-
-    public const COMMISSION = 0;
-
-    public const TAX = 0;
-
-    public const PAYMENT_DESCRIPTION = 'Recharge Supply Payment';
-
-    public const COM_DESCRIPTION = 'Recharge Supply Payment Commission';
-
-    public const PRODUCT_AIRTEL_ID = 2;
-
-    public const CIRCLE_FLAG = 1;
-
-    public const AIRTEL_COMMISSION = 0.029;
-
-    public const SHORT_NAME_AIRTEL = 'AT';
-
-    public const SHORT_NAME_JIO = 'JO';
-
+    public const LOAN_DESCRIPTIONS = [
+        'Personal' => 'Loan taken for personal expenses such as medical bills, travel, or home renovations.',
+        'Home' => 'Loan used for purchasing a new home or refinancing an existing mortgage.',
+        'Business' => 'Loan acquired to finance business operations, expansion, or startup costs.',
+        'Education' => 'Loan intended to cover tuition fees, books, and other educational expenses.',
+        'Car' => 'Loan specifically for purchasing a vehicle, helping you drive your dreams.',
+    ];
     public static function getTxnDate(): string
     {
         return Carbon::now()->format('Y-m-d H:i:s');
     }
 
-    public static function getVendorId(): string
-    {
-        return config('app.lapuApiUserId');
-    }
 }
