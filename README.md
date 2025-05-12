@@ -1,3 +1,7 @@
+## About the Loan Management System (LMS)
+
+This application, the Loan Management System (LMS), is a user-friendly and efficient platform designed to streamline the entire loan lifecycle. It empowers users to easily apply for a diverse range of loans, including home, business, car, and personal loans, with the potential for quick processing and approval within minutes. Beyond application, the LMS provides tools for users to track their loan status, manage repayments, and access relevant loan-related information.
+
 # Security Measures in Loan Management System (Laravel & React)
 
 This document outlines the key security measures implemented in this loan management system built with Laravel 10 (backend) and React (frontend).
