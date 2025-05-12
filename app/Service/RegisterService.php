@@ -22,7 +22,7 @@ class RegisterService
                 "id" => $registerParams->id ?? null,
             ];
             Log::channel('info')->info("[$currentDateTime]: DB response from registerGet: " . json_encode($registerGetBo));
-            $registerDbResponse = $this->registerRepository->registerGet($registerGetBo);
+            $registerDbResponse = $this->registerRepository->registerGwet($registerGetBo);
             if ($registerDbResponse) {
                 Log::channel('error')->error("[$currentDateTime]: registerDbResponse: " . json_encode($registerDbResponse));
                 return ['status' => CommonConstant::ERROR, 'message' => 'Email is already registered', "data" => []];

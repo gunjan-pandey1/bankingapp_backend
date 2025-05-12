@@ -22,7 +22,7 @@ class TxnDetailsRepositoryImpl implements TxnDetailsRepository
                 'description',
                 'txnDate'
             )
-            ->where('is_show_flag', true)
+            ->where('is_show_flag', 1)
             ->get();
         } catch (\Exception $e) {
             $this->logHelper->logCritical($e->getMessage(), 'Error getting user transactions');

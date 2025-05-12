@@ -34,7 +34,7 @@ class RegisterController extends Controller
                 'errors' => ['email' => [$responseData['message']]]
             ], $statusCode);
 
-        } catch (\Exception $exception) {
+        } catch (\Exception $exception) {   
             Log::channel('error')->error('Registration failed', [
                 'error' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString()

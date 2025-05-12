@@ -9,6 +9,7 @@ use App\Repository\ForgetPasswordEmailRepository;
 use App\Common\EncryptionHelper;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use App\Service\RabbitMQService;
 
 class ForgetPasswordService
 {
@@ -16,7 +17,8 @@ class ForgetPasswordService
 
     public function __construct(
         protected ForgetPasswordEmailRepository $forgetPasswordEmailRepository,
-        protected EncryptionHelper $encryptionHelper
+        protected EncryptionHelper $encryptionHelper,
+        protected RabbitMQService $rabbitMQService // Add this line
     ) {
         $this->queueName = config('queue.connections.rabbitmq.queue', 'forgot_password_queue');
     }
@@ -46,7 +48,7 @@ class ForgetPasswordService
             ];
 
             // Publish to RabbitMQ
-            $this->publishToQueue($emailData);
+            $this->rabbitMQService->publish($emailData);
 
             Log::channel('info')->info("[$currentDateTime] Email queued successfully: " . $email);
 
@@ -60,39 +62,5 @@ class ForgetPasswordService
             ];
         }
     }
-
-    /**
-     * Publishes a message to the RabbitMQ queue.
-     *
-     * @param array $data
-     * @return void
-     */
-    private function publishToQueue(array $data)
-    {
-        try {
-            $host = config('queue.connections.rabbitmq.host');
-            $port = config('queue.connections.rabbitmq.port');
-            $user = config('queue.connections.rabbitmq.user');
-            $password = config('queue.connections.rabbitmq.password');
-
-            $connection = new AMQPStreamConnection($host, $port, $user, $password);
-            $channel = $connection->channel();
-
-            $channel->queue_declare($this->queueName, false, true, false, false);
-
-            $messageBody = json_encode($data);
-            $message = new AMQPMessage(
-                $messageBody,
-                ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT] // Make the message persistent
-            );
-
-            $channel->basic_publish($message, '', $this->queueName);
-
-            $channel->close();
-            $connection->close();
-        } catch (Exception $e) {
-            Log::channel('error')->error("Error publishing message to queue: " . $e->getMessage());
-            throw $e;
-        }
-    }
+     
 }

@@ -33,7 +33,8 @@ class LmsUser extends Authenticatable implements JWTSubject
         'created_timestamp',
         'updated_timestamp',
         'is_show_flag',
-        'status'
+        'status',
+        'image'
     ];
 
     /**
