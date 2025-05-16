@@ -2,9 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Sentry\Laravel\Integration;
 use Throwable;
+use Sentry\Laravel\Integration;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -27,5 +28,19 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             Integration::captureUnhandledException($e);
         });
+    }
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception)) {
+            Log::channel('security')->error($exception->getMessage(), [
+                'exception' => $exception,
+                'ip' => request()->ip(),
+                'url' => request()->fullUrl(),
+                'user_agent' => request()->userAgent(),
+                'user_id' => auth()->id(),
+            ]);
+        }
+    
+        parent::report($exception);
     }
 }

@@ -12,6 +12,7 @@ use App\Repository\LoanApplyRepository;
 use App\Repository\Mysql\LoanApplyImpl;
 use Illuminate\Support\ServiceProvider;
 use App\Repository\TxnDetailsRepository;
+use Illuminate\Support\Facades\Password;
 use App\Repository\BankDetailsRepository;
 use App\Repository\LoanHistoryRepository;
 use App\Repository\UserDetailsRepository;
@@ -62,8 +63,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // if (env('APP_ENV') !== 'local') {
-        //     URL::forceScheme('https');
-        // }
+        Password::defaults(function () {
+            return Password::min(12)
+                ->mixedCase()
+                ->numbers()
+                ->symbols()
+                ->uncompromised();
+        });
     }
 }

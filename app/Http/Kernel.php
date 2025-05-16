@@ -30,18 +30,27 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            \App\Http\Middleware\SessionTimeout::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SecureHeadersMiddleware::class,
         ],
 
         'api' => [
+            'throttle:60,1', // 60 requests per minute
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SecureHeadersMiddleware::class,
+        ],
+        'login' => [
+            \App\Http\Middleware\ThrottleLoginAttempts::class . ':5,1', // 5 attempts per minute
+            \App\Http\Middleware\SecureHeadersMiddleware::class,
         ],
     ];
 
